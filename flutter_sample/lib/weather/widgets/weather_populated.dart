@@ -32,10 +32,14 @@ class WeatherPopulated extends StatelessWidget {
                 children: [
                   const SizedBox(height: 48),
                   _WeatherIcon(condition: weather.condition),
-                  Text(
-                    weather.location,
-                    style: theme.textTheme.displayMedium?.copyWith(
-                      fontWeight: FontWeight.w200,
+                 FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      weather.location,
+                      style: theme.textTheme.displayMedium?.copyWith(
+                        fontWeight: FontWeight.w200,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Text(
@@ -60,7 +64,7 @@ class WeatherPopulated extends StatelessWidget {
 class _WeatherIcon extends StatelessWidget {
   const _WeatherIcon({required this.condition});
 
-  static const _iconSize = 75.0;
+  static const _iconSize = 80.0;
 
   final WeatherCondition condition;
 
@@ -100,12 +104,12 @@ class _WeatherBackground extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            stops: const [0.25, 0.75, 0.90, 1.0],
+            stops: const [0.50, 0.90, 0.95, 1.0],
             colors: [
               color,
               color.brighten(),
+              color.brighten(20),
               color.brighten(33),
-              color.brighten(50),
             ],
           ),
         ),

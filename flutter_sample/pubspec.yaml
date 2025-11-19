@@ -15,7 +15,6 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
-  geolocator: ^14.0.2
   hydrated_bloc: ^10.1.1
   intl: ^0.20.2
   json_annotation: ^4.9.0

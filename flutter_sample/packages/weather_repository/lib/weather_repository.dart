@@ -6,13 +6,29 @@ export 'weather_repository.dart';
 import 'dart:async';
 
 import 'package:open_meteo_api/open_meteo_api.dart' hide Weather;
+import 'package:weather_repository/location_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 
 class WeatherRepository {
-  WeatherRepository({OpenMeteoApiClient? weatherApiClient})
-    : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient();
+  WeatherRepository({
+    OpenMeteoApiClient? weatherApiClient,
+    LocationRepository? locationRepository})
+    : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient(),
+      _locationRepository = locationRepository ?? LocationRepository();
 
   final OpenMeteoApiClient _weatherApiClient;
+  final LocationRepository _locationRepository;
+
+  Future<Weather> getWeatherByLocation() async {
+    final position = await _locationRepository.getCurrentPosition();
+    final location = await _locationRepository.getPlaceNameFromCoordinates(position.latitude, position.longitude);
+    final weather = await _weatherApiClient.getWeather(latitude: position.latitude, longitude: position.longitude);
+    return Weather(
+      location: location, 
+      temperature: weather.temperature, 
+      condition: weather.weatherCode.toInt().toCondition
+    );
+  }
 
   Future<Weather> getWeather(String city) async {
     final location = await _weatherApiClient.locationSearch(city);

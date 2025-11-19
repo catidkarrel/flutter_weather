@@ -44,7 +44,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     if (state.weather == Weather.empty) return;
     try {
       final weather = Weather.fromRepository(
-        await _weatherRepository.getWeather(state.weather.location),
+        await _weatherRepository.getWeatherByLocation(),
       );
       final units = state.temperatureUnits;
       final value = units.isFahrenheit

@@ -12,6 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
   equatable: ^2.0.7
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
   json_annotation: ^4.9.0
   open_meteo_api:
     path: ../open_meteo_api
