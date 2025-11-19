@@ -24,7 +24,7 @@ class OpenMeteoApiClient {
   final locationRequest = Uri.https(
     _baseUrlGeocoding,
     '/v1/search',
-    {'name': query, 'count': 1},
+    {'name': query, 'count': '1'},
   );
 
   final locationResponse = await _httpClient.get(locationRequest);
@@ -33,16 +33,19 @@ class OpenMeteoApiClient {
     throw LocationRequestFailure();
   }
 
-  final locationJson = jsonDecode(locationResponse.body) as Map;
+  final locationJson = jsonDecode(locationResponse.body) as Map<String, dynamic>;
 
-  if (!locationJson.containsKey('results')) throw LocationNotFoundFailure();
+  final resultsRaw = locationJson['results'];
 
-  final results = locationJson['results'] as List;
-
-  if (results.isEmpty) throw LocationNotFoundFailure();
-
-  return Location.fromJson(results.first as Map<String, dynamic>);
+  // Validate: must be a List AND not empty
+  if (resultsRaw is! List || resultsRaw.isEmpty) {
+    throw LocationNotFoundFailure();
   }
+
+  final results = resultsRaw.cast<Map<String, dynamic>>();
+
+  return Location.fromJson(results.first);
+}
 
   Future<Weather> getWeather({
     required double latitude,

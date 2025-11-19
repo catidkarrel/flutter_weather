@@ -17,8 +17,8 @@ extension TemperatureUnitsX on TemperatureUnits {
 class Temperature extends Equatable {
   const Temperature({required this.value});
 
-  factory Temperature.fromJson(Map<String, dynamic> json) 
-    => _$TemperatureFromJson(json);
+  factory Temperature.fromJson(Map<String, dynamic> json) => 
+    _$TemperatureFromJson(json);
 
   final double value;
   
@@ -36,6 +36,9 @@ class Weather extends Equatable {
     required this.location,
     required this.temperature,
   });
+
+  factory Weather.fromJson(Map<String, dynamic> json) =>
+    _$WeatherFromJson(json);
 
   factory Weather.fromRepository(weather_repository.Weather weather) {
     return Weather(

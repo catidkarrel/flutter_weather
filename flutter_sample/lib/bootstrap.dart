@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 
-class AppBlocObserver extends BlocObserver {
-  const AppBlocObserver();
+class WeatherBlocObserver extends BlocObserver {
+  const WeatherBlocObserver();
 
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
@@ -25,7 +25,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
 
-  Bloc.observer = const AppBlocObserver();
+  Bloc.observer = const WeatherBlocObserver();
 
   // Add cross-flavor configuration here
 
