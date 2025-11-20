@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 
+/// Bloc observer for handling bloc events
 class WeatherBlocObserver extends BlocObserver {
   const WeatherBlocObserver();
 
@@ -20,6 +21,7 @@ class WeatherBlocObserver extends BlocObserver {
   }
 }
 
+/// Bootstrap function for initializing app
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
@@ -27,7 +29,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   Bloc.observer = const WeatherBlocObserver();
 
-  // Add cross-flavor configuration here
+  /// Add cross-flavor configuration here
 
   runApp(await builder());
 }

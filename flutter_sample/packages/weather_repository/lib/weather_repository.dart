@@ -9,6 +9,7 @@ import 'package:open_meteo_api/open_meteo_api.dart' hide Weather;
 import 'package:weather_repository/location_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 
+/// Class for handling weather related operations.
 class WeatherRepository {
   WeatherRepository({
     OpenMeteoApiClient? weatherApiClient,
@@ -16,9 +17,12 @@ class WeatherRepository {
     : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient(),
       _locationRepository = locationRepository ?? LocationRepository();
 
+  /// Weather api client
   final OpenMeteoApiClient _weatherApiClient;
+  /// Location repository
   final LocationRepository _locationRepository;
 
+  /// Get weather by current location
   Future<Weather> getWeatherByLocation() async {
     final position = await _locationRepository.getCurrentPosition();
     final location = await _locationRepository.getPlaceNameFromCoordinates(position.latitude, position.longitude);
@@ -30,6 +34,7 @@ class WeatherRepository {
     );
   }
 
+  /// Get weather by city name
   Future<Weather> getWeather(String city) async {
     final location = await _weatherApiClient.locationSearch(city);
     final weather = await _weatherApiClient.getWeather(
@@ -43,9 +48,11 @@ class WeatherRepository {
     );
   }
 
+  /// Dispose weather api client
   void dispose() => _weatherApiClient.close();
 }
 
+/// Extension for converting weather code to weather condition
 extension on int {
   WeatherCondition get toCondition {
     switch (this) {

@@ -6,6 +6,7 @@ import 'package:flutter_sample/weather/weather.dart';
 import 'package:weather_repository/weather_repository.dart'
     show WeatherCondition, WeatherRepository;
 
+/// Weather app
 class WeatherApp extends StatelessWidget {
   const WeatherApp({super.key});
 
@@ -22,6 +23,7 @@ class WeatherApp extends StatelessWidget {
   }
 }
 
+/// Weather app view
 class WeatherAppView extends StatelessWidget {
   const WeatherAppView({super.key});
 
@@ -43,6 +45,7 @@ class WeatherAppView extends StatelessWidget {
   }
 }
 
+/// Extension for Weather class
 extension on Weather {
   Color get toColor {
     switch (condition) {

@@ -5,6 +5,7 @@ import 'package:flutter_sample/bootstrap.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
+/// Main entry point for development environment
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = const WeatherBlocObserver();
