@@ -12,15 +12,18 @@ class WeatherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      /// App bar with settings button
       appBar: AppBar(
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => Navigator.of(context).push<void>(
+              /// Route to settings page
               SettingsPage.route(),
             ))
         ],
       ),
+      /// Body of weather page
       body: Center(
         child: BlocBuilder<WeatherCubit, WeatherState>(
           builder: (context, state) {
@@ -39,10 +42,13 @@ class WeatherPage extends StatelessWidget {
           }
         ),
       ),
+      /// Floating action button for searching city
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search, semanticLabel: 'Search'),
         onPressed: () async {
-          final city = await Navigator.of(context).push(SearchPage.route());
+          final city = await Navigator.of(context).push(
+            /// Route to search page
+            SearchPage.route());
           if (!context.mounted) return;
           await context.read<WeatherCubit>().fetchWeather(city);
         },

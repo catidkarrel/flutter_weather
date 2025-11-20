@@ -8,11 +8,15 @@ import 'package:weather_repository/weather_repository.dart'
 part 'weather_cubit.g.dart';
 part 'weather_state.dart';
 
+/// Class definition for weather cubit that extends HydratedCubit
 class WeatherCubit extends HydratedCubit<WeatherState> {
+  /// Constructor for weather cubit
   WeatherCubit(this._weatherRepository) : super(WeatherState());
 
+  /// Weather repository
   final WeatherRepository _weatherRepository;
 
+  /// Fetch weather for a city
   Future<void> fetchWeather(String? city) async {
     if (city == null || city.isEmpty) return;
 
@@ -39,6 +43,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     }
   }
 
+  /// Refresh weather with the current location
   Future<void> refreshWeather() async {
     if (!state.status.isSuccess) return;
     if (state.weather == Weather.empty) return;
@@ -63,6 +68,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     }
   }
 
+  /// Toggle temperature units
   void toggleUnits() {
     final units = state.temperatureUnits.isFahrenheit
       ? TemperatureUnits.celsius
@@ -88,15 +94,21 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     }
   }
 
+  /// JSON serialization for weather cubit
   @override
   WeatherState fromJson(Map<String, dynamic> json) => 
     WeatherState.fromJson(json);
 
+  /// JSON deserialization for weather cubit
   @override
   Map<String, dynamic> toJson(WeatherState state) => state.toJson();
 }
 
+/// Extension for temperature conversion
 extension TemperatureConversion on double {
+  /// Convert temperature to Fahrenheit
   double toFahrenheit() => (this * 9 /5) + 32;
+
+  /// Convert temperature to Celsius
   double toCelsius() => (this - 32) * 5 / 9;
 }
