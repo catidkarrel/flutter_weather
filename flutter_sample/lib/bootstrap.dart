@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sample/flavor_config.dart';
 
 /// Bloc observer for handling bloc events
 class WeatherBlocObserver extends BlocObserver {
@@ -30,6 +31,20 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   Bloc.observer = const WeatherBlocObserver();
 
   /// Add cross-flavor configuration here
+  const flavor = String.fromEnvironment('FLAVOR');
+  var configPath = 'assets/config/dev.json'; // default
+
+  switch (flavor) {
+    case 'staging':
+      configPath = 'assets/config/staging.json';
+    case 'production':
+      configPath = 'assets/config/prod.json';
+    case 'development':
+    default:
+      configPath = 'assets/config/dev.json';
+  }
+
+  await FlavorConfig.load(configPath);
 
   runApp(await builder());
 }

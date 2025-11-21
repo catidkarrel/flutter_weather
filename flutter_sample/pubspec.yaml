@@ -36,3 +36,8 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+  assets:
+    - assets/config/dev.json
+    - assets/config/staging.json
+    - assets/config/prod.json
+

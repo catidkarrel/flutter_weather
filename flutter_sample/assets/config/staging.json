@@ -1,0 +1,6 @@
+{
+    "flavor": "staging",
+    "baseUrlWeather": "api.open-meteo.com",
+    "baseUrlGeoCoding": "geocoding-api.open-meteo.com",
+    "enableLogs": true
+}
