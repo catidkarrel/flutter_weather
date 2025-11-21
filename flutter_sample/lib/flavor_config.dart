@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class FlavorConfig {
-
   FlavorConfig({
     required this.flavor,
     required this.baseUrlWeather,
@@ -15,7 +14,7 @@ class FlavorConfig {
     return FlavorConfig(
       flavor: json['flavor'] as String,
       baseUrlWeather: json['baseUrlWeather'] as String,
-      baseUrlGeocoding: json['baseUrlGeocoding'] as String,
+      baseUrlGeocoding: json['baseUrlGeoCoding'] as String,
       enableLogs: json['enableLogs'] as bool,
     );
   }

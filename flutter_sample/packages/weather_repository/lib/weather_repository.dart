@@ -13,9 +13,19 @@ import 'package:weather_repository/weather_repository.dart';
 class WeatherRepository {
   WeatherRepository({
     OpenMeteoApiClient? weatherApiClient,
-    LocationRepository? locationRepository})
-    : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient(),
+    LocationRepository? locationRepository,
+    required this.baseUrlWeather,
+    required this.baseUrlGeocoding,
+    this.enableLogs = false})
+    : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient(
+      aBaseUrlWeather: baseUrlWeather, 
+      aBaseUrlGeocoding: baseUrlGeocoding,
+      enableLogs: enableLogs),
       _locationRepository = locationRepository ?? LocationRepository();
+
+  final String baseUrlWeather;
+  final String baseUrlGeocoding;
+  final bool enableLogs;
 
   /// Weather api client
   final OpenMeteoApiClient _weatherApiClient;

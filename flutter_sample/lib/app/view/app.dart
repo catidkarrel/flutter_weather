@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/flavor_config.dart';
 import 'package:flutter_sample/weather/cubit/weather_cubit.dart';
 import 'package:flutter_sample/weather/view/weather_page.dart';
 import 'package:flutter_sample/weather/weather.dart';
@@ -13,7 +14,11 @@ class WeatherApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (_) => WeatherRepository(),
+      create: (_) => WeatherRepository(
+        baseUrlWeather: FlavorConfig.current.baseUrlWeather, 
+        baseUrlGeocoding: FlavorConfig.current.baseUrlGeocoding, 
+        enableLogs: FlavorConfig.current.enableLogs
+      ),
       dispose: (repository) => repository.dispose(),
       child: BlocProvider(
         create: (context) => WeatherCubit(context.read<WeatherRepository>()),

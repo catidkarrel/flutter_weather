@@ -18,19 +18,28 @@ class WeatherNotFoundFailure implements Exception {}
 
 /// Class for handling open-meteo api operations
 class OpenMeteoApiClient {
-  OpenMeteoApiClient({http.Client? httpClient}) : _httpClient = httpClient ?? http.Client();
+  OpenMeteoApiClient({
+    http.Client? httpClient,
+    required this.aBaseUrlWeather,
+    required this.aBaseUrlGeocoding,
+    this.enableLogs = false
+  }) : _httpClient = httpClient ?? http.Client();
 
   /// Base url for weather api
-  static const _baseUrlWeather = 'api.open-meteo.com';
+  //static const _baseUrlWeather = ;
   /// Base url for geocoding api
-  static const _baseUrlGeocoding = 'geocoding-api.open-meteo.com';
+  //static const _baseUrlGeocoding = 'geocoding-api.open-meteo.com';
   /// Http client
   final http.Client _httpClient;
+
+  final String aBaseUrlWeather;
+  final String aBaseUrlGeocoding;
+  final bool enableLogs;
 
   /// Search location by name
   Future<Location> locationSearch(String query) async {
     final locationRequest = Uri.https(
-      _baseUrlGeocoding,
+      aBaseUrlGeocoding,
       '/v1/search',
       {'name': query, 'count': '1'},
     );
@@ -62,7 +71,7 @@ class OpenMeteoApiClient {
     required double latitude,
     required double longitude,
   }) async {
-    final weatherRequest = Uri.https(_baseUrlWeather, 'v1/forecast', 
+    final weatherRequest = Uri.https(aBaseUrlWeather, 'v1/forecast', 
     {'latitude': '$latitude',
      'longitude': '$longitude',
      'current_weather': 'true'
