@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:open_meteo_api/open_meteo_api.dart';
 
 /// Exception for location request failure

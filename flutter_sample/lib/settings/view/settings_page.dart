@@ -4,11 +4,11 @@ import 'package:flutter_sample/weather/cubit/weather_cubit.dart';
 import 'package:flutter_sample/weather/weather.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage._();
+  const SettingsPage({super.key});
 
   static Route<void> route() {
     return MaterialPageRoute<void>(
-      builder: (_) => const SettingsPage._()
+      builder: (_) => const SettingsPage(),
     );
   }
 
@@ -17,13 +17,14 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       /// App bar with title
       appBar: AppBar(title: const Text('Settings')),
+
       /// List view of settings
       body: ListView(
         children: <Widget>[
           BlocBuilder<WeatherCubit, WeatherState>(
             /// Build when temperature units change
             buildWhen: (previous, current) =>
-              previous.temperatureUnits != current.temperatureUnits,
+                previous.temperatureUnits != current.temperatureUnits,
             builder: (context, state) {
               /// List tile for temperature units
               return ListTile(
@@ -32,6 +33,7 @@ class SettingsPage extends StatelessWidget {
                 subtitle: const Text(
                   'Use metric measurements for temperature units.',
                 ),
+
                 /// Switch view for temperature units
                 trailing: Switch(
                   value: state.temperatureUnits.isCelsius,
