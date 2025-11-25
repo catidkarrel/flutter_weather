@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/weather/cubit/weather_cubit.dart';
-import 'package:flutter_sample/weather/weather.dart';
+import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
+import 'package:flutter_sample/pages/weather/models/weather.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

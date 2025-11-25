@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/weather/weather.dart';
+import 'package:flutter_sample/pages/weather/weather.dart';
 import 'package:weather_repository/weather_repository.dart' hide Weather;
 
 class WeatherPopulated extends StatelessWidget {

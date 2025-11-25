@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/search/view/search_page.dart';
-import 'package:flutter_sample/settings/view/settings_page.dart';
-import 'package:flutter_sample/weather/cubit/weather_cubit.dart';
-import 'package:flutter_sample/weather/widgets/widgets.dart';
+import 'package:flutter_sample/pages/search/view/search_page.dart';
+import 'package:flutter_sample/pages/settings/view/settings_page.dart';
+import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
+import 'package:flutter_sample/pages/weather/widgets/widgets.dart';
 
 class WeatherPage extends StatelessWidget {
   const WeatherPage({super.key});
