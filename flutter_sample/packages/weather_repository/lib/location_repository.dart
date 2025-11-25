@@ -5,8 +5,7 @@ import 'package:geolocator/geolocator.dart';
 /// Class for handling location related operations.
 class LocationRepository {
 
-  /// Get current position
-  Future<Position> getCurrentPosition() async {
+  Future<void> initLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
 
     /// Check if location permission is denied
@@ -21,6 +20,12 @@ class LocationRepository {
     if (permission == LocationPermission.deniedForever) {
       throw Exception('Location permission denied forever');
     }
+  }
+
+  /// Get current position
+  Future<Position> getCurrentPosition() async {
+    // Ensure permissions are initialized / requested
+    await initLocationPermission();
 
     /// Set location settings
     final LocationSettings locationSettings = LocationSettings(
@@ -28,10 +33,12 @@ class LocationRepository {
       distanceFilter: 100,
     );
 
-    /// Fetch location
-    return await Geolocator.getCurrentPosition(
-      locationSettings: locationSettings
+    /// Fetch location and return
+    final Position position = await Geolocator.getCurrentPosition(
+      locationSettings: locationSettings,
     );
+
+    return position;
   }
 
   /// Convert coordinates to readable place name

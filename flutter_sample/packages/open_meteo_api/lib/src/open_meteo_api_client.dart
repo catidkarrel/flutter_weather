@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_meteo_api/open_meteo_api.dart';
 
@@ -19,18 +20,20 @@ class WeatherNotFoundFailure implements Exception {}
 /// Class for handling open-meteo api operations
 class OpenMeteoApiClient {
   OpenMeteoApiClient({
-    http.Client? httpClient,
+    Dio? dioClient,
     required this.aBaseUrlWeather,
     required this.aBaseUrlGeocoding,
     this.enableLogs = false
-  }) : _httpClient = httpClient ?? http.Client();
+  }) : _dioClient = dioClient ?? Dio();
 
   /// Base url for weather api
   //static const _baseUrlWeather = ;
   /// Base url for geocoding api
   //static const _baseUrlGeocoding = 'geocoding-api.open-meteo.com';
   /// Http client
-  final http.Client _httpClient;
+  //final http.Client _httpClient;
+
+  final Dio _dioClient;
 
   final String aBaseUrlWeather;
   final String aBaseUrlGeocoding;
@@ -38,32 +41,38 @@ class OpenMeteoApiClient {
 
   /// Search location by name
   Future<Location> locationSearch(String query) async {
-    final locationRequest = Uri.https(
+    final locationUri = Uri.https(
       aBaseUrlGeocoding,
       '/v1/search',
       {'name': query, 'count': '1'},
     );
 
-    /// Make request to geocoding api
-    final locationResponse = await _httpClient.get(locationRequest);
+    try {
+      /// Make request to geocoding api
+      //final locationResponse = await _httpClient.get(locationUri);
+      final locationResponse = await _dioClient.getUri(locationUri);
 
-    if (locationResponse.statusCode != 200) {
+      if (locationResponse.statusCode != 200) {
+        throw LocationRequestFailure();
+      }
+
+      /// Parse response body to json
+      //final locationJson = jsonDecode(locationResponse.body) as Map<String, dynamic>;
+      final locationJson = locationResponse.data;
+
+      final resultsRaw = locationJson['results'];
+
+      /// Validate: must be a List AND not empty
+      if (resultsRaw is! List || resultsRaw.isEmpty) {
+        throw LocationNotFoundFailure();
+      }
+
+      final results = resultsRaw.cast<Map<String, dynamic>>();
+
+      return Location.fromJson(results.first);
+    } on DioException {
       throw LocationRequestFailure();
     }
-
-    /// Parse response body to json
-    final locationJson = jsonDecode(locationResponse.body) as Map<String, dynamic>;
-
-    final resultsRaw = locationJson['results'];
-
-    /// Validate: must be a List AND not empty
-    if (resultsRaw is! List || resultsRaw.isEmpty) {
-      throw LocationNotFoundFailure();
-    }
-
-    final results = resultsRaw.cast<Map<String, dynamic>>();
-
-    return Location.fromJson(results.first);
   }
 
   /// Get weather by latitude and longitude
@@ -71,33 +80,41 @@ class OpenMeteoApiClient {
     required double latitude,
     required double longitude,
   }) async {
-    final weatherRequest = Uri.https(aBaseUrlWeather, 'v1/forecast', 
+    final weatherUri = Uri.https(aBaseUrlWeather, 'v1/forecast', 
     {'latitude': '$latitude',
      'longitude': '$longitude',
      'current_weather': 'true'
     });
 
-    /// Make request to weather api
-    final weatherResponse = await _httpClient.get(weatherRequest);
+    try {
+      /// Make request to weather api
+      //final weatherResponse = await _httpClient.get(weatherRequest);
+      final weatherResponse = await _dioClient.getUri(weatherUri);
 
-    if (weatherResponse.statusCode != 200) {
-     throw WeatherRequestFailure;
+      if (weatherResponse.statusCode != 200) {
+        throw WeatherRequestFailure;
+      }
+
+      /// Parse response body to json
+      //final bodyJson = jsonDecode(weatherResponse.body) as Map<String, dynamic>;
+      final bodyJson = weatherResponse.data;
+
+      if (!bodyJson.containsKey('current_weather')) {
+        throw WeatherNotFoundFailure();
+      }
+
+      final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
+
+      return Weather.fromJson(weatherJson);
+    } on DioException {
+      throw WeatherRequestFailure();
     }
-
-    /// Parse response body to json
-    final bodyJson = jsonDecode(weatherResponse.body) as Map<String, dynamic>;
-
-    if (!bodyJson.containsKey('current_weather')) {
-      throw WeatherNotFoundFailure();
-    }
-
-    final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
-
-    return Weather.fromJson(weatherJson);
+    
   }
 
   /// Close http client
   void close() {
-    _httpClient.close();
+    //_httpClient.close();
+    _dioClient.close();
   }
 }

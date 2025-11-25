@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sample/flavor_config.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:weather_repository/location_repository.dart';
 
 /// Bloc observer for handling bloc events
 class WeatherBlocObserver extends BlocObserver {
@@ -28,6 +29,19 @@ class WeatherBlocObserver extends BlocObserver {
 /// Bootstrap function for initializing app
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialization process like location permission,
+  // app config can be done here
+
+  final locationRepository = LocationRepository();
+
+  try {
+    await locationRepository.initLocationPermission();
+    log('Location permission granted');
+  } on Exception {
+    log('Location permission denied');
+  }
+
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
