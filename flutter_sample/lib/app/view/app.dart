@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/flavor_config.dart';
+import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
+import 'package:flutter_sample/pages/favorites/view/favorites_page.dart';
 import 'package:flutter_sample/pages/settings/view/settings_page.dart';
 import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
 import 'package:flutter_sample/pages/weather/view/weather_page.dart';
@@ -21,8 +23,19 @@ class WeatherApp extends StatelessWidget {
         enableLogs: FlavorConfig.current.enableLogs
       ),
       dispose: (repository) => repository.dispose(),
-      child: BlocProvider(
-        create: (context) => WeatherCubit(context.read<WeatherRepository>()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => WeatherCubit(
+              context.read<WeatherRepository>()
+            ),
+          ),
+          BlocProvider(
+            create: (context) => FavoritesCubit(
+              context.read<WeatherRepository>()
+            ),
+          ),
+        ],
         child: const WeatherAppView(),
       ),
     );
@@ -42,7 +55,7 @@ class _WeatherAppViewState extends State<WeatherAppView> {
 
   final List<Widget> _pages = const [
     WeatherPage(),
-    Placeholder(color: Colors.blueAccent),
+    FavoritesPage(),
     SettingsPage(),
   ];
 
@@ -71,8 +84,8 @@ class _WeatherAppViewState extends State<WeatherAppView> {
               label: 'Weather',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.radar),
-              label: 'Radar',
+              icon: Icon(Icons.favorite),
+              label: 'Favorites',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),

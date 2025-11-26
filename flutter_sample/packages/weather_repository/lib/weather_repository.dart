@@ -40,7 +40,9 @@ class WeatherRepository {
     return Weather(
       location: location, 
       temperature: weather.temperature, 
-      condition: weather.weatherCode.toInt().toCondition
+      condition: weather.weatherCode.toInt().toCondition,
+      latitude: position.latitude.toString(),
+      longitude: position.longitude.toString(),
     );
   }
 
@@ -55,6 +57,8 @@ class WeatherRepository {
       temperature: weather.temperature,
       location: location.name,
       condition: weather.weatherCode.toInt().toCondition,
+      latitude: location.latitude.toString(),
+      longitude: location.longitude.toString(),
     );
   }
 

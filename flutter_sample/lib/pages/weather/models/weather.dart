@@ -35,6 +35,8 @@ class Weather extends Equatable {
     required this.lastUpdated,
     required this.location,
     required this.temperature,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
@@ -46,6 +48,8 @@ class Weather extends Equatable {
       lastUpdated: DateTime.now(),
       location: weather.location,
       temperature: Temperature(value: weather.temperature),
+      latitude: weather.latitude.toString(),
+      longitude: weather.longitude.toString(),
     );
   }
 
@@ -53,13 +57,17 @@ class Weather extends Equatable {
     condition: WeatherCondition.unknown,
     lastUpdated: DateTime(0),
     temperature: const Temperature(value: 0),
-    location: '--'
+    location: '--',
+    latitude: '0',
+    longitude: '0',
   );
 
   final WeatherCondition condition;
   final DateTime lastUpdated;
   final String location;
   final Temperature temperature;
+  final String latitude;
+  final String longitude;
 
   @override
   List<Object> get props => [condition, lastUpdated, location, temperature];
@@ -70,13 +78,17 @@ class Weather extends Equatable {
     WeatherCondition? condition,
     DateTime? lastUpdated,
     String? location,
-    Temperature? temperature
+    Temperature? temperature,
+    String? latitude,
+    String? longitude,
   }) {
     return Weather(
       condition: condition ?? this.condition,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       location: location ?? this.location,
-      temperature: temperature ?? this.temperature
+      temperature: temperature ?? this.temperature,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 }

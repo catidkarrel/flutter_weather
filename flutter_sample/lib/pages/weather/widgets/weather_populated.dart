@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
+import 'package:flutter_sample/pages/favorites/models/favorite_location.dart';
 import 'package:flutter_sample/pages/weather/weather.dart';
 import 'package:weather_repository/weather_repository.dart' hide Weather;
 
@@ -32,7 +35,7 @@ class WeatherPopulated extends StatelessWidget {
                 children: [
                   const SizedBox(height: 48),
                   _WeatherIcon(condition: weather.condition),
-                 FittedBox(
+                  FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
                       weather.location,
@@ -50,6 +53,19 @@ class WeatherPopulated extends StatelessWidget {
                   ),
                   Text(
                     '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.favorite),
+                    onPressed: () {
+                      final cubit = context.read<FavoritesCubit>()
+                        ..addFavorite(
+                          FavoriteLocation(
+                            name: weather.location,
+                            latitude: weather.latitude.toString(),
+                            longitude: weather.longitude.toString(),
+                          ),
+                        );
+                    },
                   ),
                 ],
               ),

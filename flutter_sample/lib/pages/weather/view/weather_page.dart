@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
+import 'package:flutter_sample/pages/favorites/models/favorite_location.dart';
+import 'package:flutter_sample/pages/favorites/view/favorites_page.dart';
 import 'package:flutter_sample/pages/search/view/search_page.dart';
 import 'package:flutter_sample/pages/settings/view/settings_page.dart';
 import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
@@ -12,7 +15,7 @@ class WeatherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      /// App bar with settings button
+      /// App bar with settings and favorites buttons
       appBar: AppBar(
         actions: [
           IconButton(

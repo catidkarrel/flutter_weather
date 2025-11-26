@@ -33,6 +33,8 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) =>
           'temperature',
           (v) => Temperature.fromJson(v as Map<String, dynamic>),
         ),
+        latitude: $checkedConvert('latitude', (v) => v as String),
+        longitude: $checkedConvert('longitude', (v) => v as String),
       );
       return val;
     }, fieldKeyMap: const {'lastUpdated': 'last_updated'});
@@ -42,6 +44,8 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
   'last_updated': instance.lastUpdated.toIso8601String(),
   'location': instance.location,
   'temperature': instance.temperature.toJson(),
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
 };
 
 const _$WeatherConditionEnumMap = {

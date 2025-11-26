@@ -26,6 +26,7 @@ class WeatherBlocObserver extends BlocObserver {
   }
 }
 
+/// Entrypoint of the app
 /// Bootstrap function for initializing app
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
