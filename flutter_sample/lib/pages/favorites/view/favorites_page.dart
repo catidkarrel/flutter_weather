@@ -30,8 +30,17 @@ class FavoritesPage extends StatelessWidget {
                 );
               }
 
-              return ListTile(
-                title: Text(location.name),
+              return Dismissible(
+                key: ValueKey(location.name),
+                onDismissed: (direction) {
+                  context.read<FavoritesCubit>().removeFavorite(location.name);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Removed ${location.name}')),
+                  );
+                },
+                child: ListTile(
+                  title: Text(location.name),
                 subtitle: Text(
                   'Temp: ${weather.temperature}°C • ${weather.condition.name}'
                 ),
@@ -40,7 +49,7 @@ class FavoritesPage extends StatelessWidget {
                   onPressed: () => 
                     context.read<FavoritesCubit>().removeFavorite(location.name),
                 ),
-              );
+              ));
             },
           ),
         );
