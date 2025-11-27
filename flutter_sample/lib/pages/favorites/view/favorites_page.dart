@@ -16,13 +16,14 @@ class FavoritesPage extends StatelessWidget {
         }
 
         return RefreshIndicator(
-          onRefresh: () => context.read<FavoritesCubit>().loadWeatherForFavorites(),
+          onRefresh: () =>
+              context.read<FavoritesCubit>().loadWeatherForFavorites(),
           child: ListView.builder(
             itemCount: state.favorites.length,
             itemBuilder: (context, index) {
               final location = state.favorites[index];
               final weather = state.weatherByLocation[location.name];
-              
+
               if (weather == null) {
                 return ListTile(
                   title: Text(location.name),
@@ -41,15 +42,17 @@ class FavoritesPage extends StatelessWidget {
                 },
                 child: ListTile(
                   title: Text(location.name),
-                subtitle: Text(
-                  'Temp: ${weather.temperature}°C • ${weather.condition.name}'
+                  subtitle: Text(
+                    'Temp: ${weather.temperature}°C • ${weather.condition.name}',
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.remove_circle, color: Colors.red),
+                    onPressed: () => context
+                        .read<FavoritesCubit>()
+                        .removeFavorite(location.name),
+                  ),
                 ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.remove_circle, color: Colors.red),
-                  onPressed: () => 
-                    context.read<FavoritesCubit>().removeFavorite(location.name),
-                ),
-              ));
+              );
             },
           ),
         );

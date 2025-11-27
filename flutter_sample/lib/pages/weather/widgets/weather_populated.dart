@@ -1,7 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
-import 'package:flutter_sample/pages/favorites/models/favorite_location.dart';
+
 import 'package:flutter_sample/pages/weather/weather.dart';
 import 'package:weather_repository/weather_repository.dart' hide Weather;
 
@@ -54,25 +54,171 @@ class WeatherPopulated extends StatelessWidget {
                   Text(
                     '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.favorite),
-                    onPressed: () {
-                      final cubit = context.read<FavoritesCubit>()
-                        ..addFavorite(
-                          FavoriteLocation(
-                            name: weather.location,
-                            latitude: weather.latitude.toString(),
-                            longitude: weather.longitude.toString(),
-                          ),
-                        );
-                    },
-                  ),
+                  const SizedBox(height: 24),
+                  _WeatherDetails(weather: weather),
                 ],
               ),
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _WeatherDetails extends StatelessWidget {
+  const _WeatherDetails({required this.weather});
+
+  final Weather weather;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.colorScheme.onSurface.withOpacity(0.1),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _DetailItem(
+                icon: Icons.air,
+                label: 'Wind Speed',
+                value: weather.windSpeed != null
+                    ? '${weather.windSpeed!.toStringAsFixed(1)} km/h'
+                    : 'N/A',
+              ),
+              _WindDirectionItem(
+                windDirection: weather.windDirection,
+                label: 'Wind Dir',
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _DetailItem(
+                icon: Icons.water_drop,
+                label: 'Humidity',
+                value: weather.humidity != null
+                    ? '${weather.humidity!.toStringAsFixed(0)}%'
+                    : 'N/A',
+              ),
+              _DetailItem(
+                icon: Icons.thermostat,
+                label: 'Condition',
+                value: weather.condition.name.toUpperCase(),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WindDirectionItem extends StatelessWidget {
+  const _WindDirectionItem({
+    required this.windDirection,
+    required this.label,
+  });
+
+  final double? windDirection;
+  final String label;
+
+  String _getWindDirectionText(double? degrees) {
+    if (degrees == null) return 'N/A';
+    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    final index = ((degrees + 22.5) / 45).floor() % 8;
+    return directions[index];
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Expanded(
+      child: Column(
+        children: [
+          Transform.rotate(
+            angle: windDirection != null
+                ? (windDirection! * math.pi / 180) // Convert degrees to radians
+                : 0,
+            child: Icon(
+              Icons.navigation,
+              size: 32,
+              color: theme.colorScheme.onSurface.withOpacity(0.8),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _getWindDirectionText(windDirection),
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DetailItem extends StatelessWidget {
+  const _DetailItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Expanded(
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            size: 32,
+            color: theme.colorScheme.onSurface.withOpacity(0.8),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

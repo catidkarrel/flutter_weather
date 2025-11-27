@@ -16,12 +16,15 @@ class WeatherRepository {
     LocationRepository? locationRepository,
     required this.baseUrlWeather,
     required this.baseUrlGeocoding,
-    this.enableLogs = false})
-    : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient(
-      aBaseUrlWeather: baseUrlWeather, 
-      aBaseUrlGeocoding: baseUrlGeocoding,
-      enableLogs: enableLogs),
-      _locationRepository = locationRepository ?? LocationRepository();
+    this.enableLogs = false,
+  }) : _weatherApiClient =
+           weatherApiClient ??
+           OpenMeteoApiClient(
+             aBaseUrlWeather: baseUrlWeather,
+             aBaseUrlGeocoding: baseUrlGeocoding,
+             enableLogs: enableLogs,
+           ),
+       _locationRepository = locationRepository ?? LocationRepository();
 
   final String baseUrlWeather;
   final String baseUrlGeocoding;
@@ -29,20 +32,30 @@ class WeatherRepository {
 
   /// Weather api client
   final OpenMeteoApiClient _weatherApiClient;
+
   /// Location repository
   final LocationRepository _locationRepository;
 
   /// Get weather by current location
   Future<Weather> getWeatherByLocation() async {
     final position = await _locationRepository.getCurrentPosition();
-    final location = await _locationRepository.getPlaceNameFromCoordinates(position.latitude, position.longitude);
-    final weather = await _weatherApiClient.getWeather(latitude: position.latitude, longitude: position.longitude);
+    final location = await _locationRepository.getPlaceNameFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+    final weather = await _weatherApiClient.getWeather(
+      latitude: position.latitude,
+      longitude: position.longitude,
+    );
     return Weather(
-      location: location, 
-      temperature: weather.temperature, 
+      location: location,
+      temperature: weather.temperature,
       condition: weather.weatherCode.toInt().toCondition,
       latitude: position.latitude.toString(),
       longitude: position.longitude.toString(),
+      windSpeed: weather.windSpeed,
+      windDirection: weather.windDirection,
+      humidity: weather.humidity,
     );
   }
 
@@ -59,6 +72,31 @@ class WeatherRepository {
       condition: weather.weatherCode.toInt().toCondition,
       latitude: location.latitude.toString(),
       longitude: location.longitude.toString(),
+      windSpeed: weather.windSpeed,
+      windDirection: weather.windDirection,
+      humidity: weather.humidity,
+    );
+  }
+
+  /// Get weather by coordinates
+  Future<Weather> getWeatherByCoordinates({
+    required double latitude,
+    required double longitude,
+    required String locationName,
+  }) async {
+    final weather = await _weatherApiClient.getWeather(
+      latitude: latitude,
+      longitude: longitude,
+    );
+    return Weather(
+      temperature: weather.temperature,
+      location: locationName,
+      condition: weather.weatherCode.toInt().toCondition,
+      latitude: latitude.toString(),
+      longitude: longitude.toString(),
+      windSpeed: weather.windSpeed,
+      windDirection: weather.windDirection,
+      humidity: weather.humidity,
     );
   }
 

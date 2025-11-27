@@ -17,11 +17,11 @@ extension TemperatureUnitsX on TemperatureUnits {
 class Temperature extends Equatable {
   const Temperature({required this.value});
 
-  factory Temperature.fromJson(Map<String, dynamic> json) => 
-    _$TemperatureFromJson(json);
+  factory Temperature.fromJson(Map<String, dynamic> json) =>
+      _$TemperatureFromJson(json);
 
   final double value;
-  
+
   Map<String, dynamic> toJson() => _$TemperatureToJson(this);
 
   @override
@@ -37,10 +37,13 @@ class Weather extends Equatable {
     required this.temperature,
     required this.latitude,
     required this.longitude,
+    this.windSpeed,
+    this.windDirection,
+    this.humidity,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
-    _$WeatherFromJson(json);
+      _$WeatherFromJson(json);
 
   factory Weather.fromRepository(weather_repository.Weather weather) {
     return Weather(
@@ -50,6 +53,9 @@ class Weather extends Equatable {
       temperature: Temperature(value: weather.temperature),
       latitude: weather.latitude.toString(),
       longitude: weather.longitude.toString(),
+      windSpeed: weather.windSpeed,
+      windDirection: weather.windDirection,
+      humidity: weather.humidity,
     );
   }
 
@@ -68,9 +74,20 @@ class Weather extends Equatable {
   final Temperature temperature;
   final String latitude;
   final String longitude;
+  final double? windSpeed;
+  final double? windDirection;
+  final double? humidity;
 
   @override
-  List<Object> get props => [condition, lastUpdated, location, temperature];
+  List<Object?> get props => [
+    condition,
+    lastUpdated,
+    location,
+    temperature,
+    windSpeed,
+    windDirection,
+    humidity,
+  ];
 
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
 
@@ -81,6 +98,9 @@ class Weather extends Equatable {
     Temperature? temperature,
     String? latitude,
     String? longitude,
+    double? windSpeed,
+    double? windDirection,
+    double? humidity,
   }) {
     return Weather(
       condition: condition ?? this.condition,
@@ -89,6 +109,9 @@ class Weather extends Equatable {
       temperature: temperature ?? this.temperature,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      windSpeed: windSpeed ?? this.windSpeed,
+      windDirection: windDirection ?? this.windDirection,
+      humidity: humidity ?? this.humidity,
     );
   }
 }

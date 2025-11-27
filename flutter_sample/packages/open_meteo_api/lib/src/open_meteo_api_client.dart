@@ -21,7 +21,7 @@ class OpenMeteoApiClient {
     Dio? dioClient,
     required this.aBaseUrlWeather,
     required this.aBaseUrlGeocoding,
-    this.enableLogs = false
+    this.enableLogs = false,
   }) : _dioClient = dioClient ?? Dio();
 
   /// Base url for weather api
@@ -39,11 +39,10 @@ class OpenMeteoApiClient {
 
   /// Search location by name
   Future<Location> locationSearch(String query) async {
-    final locationUri = Uri.https(
-      aBaseUrlGeocoding,
-      '/v1/search',
-      {'name': query, 'count': '1'},
-    );
+    final locationUri = Uri.https(aBaseUrlGeocoding, '/v1/search', {
+      'name': query,
+      'count': '1',
+    });
 
     try {
       /// Make request to geocoding api
@@ -78,10 +77,11 @@ class OpenMeteoApiClient {
     required double latitude,
     required double longitude,
   }) async {
-    final weatherUri = Uri.https(aBaseUrlWeather, 'v1/forecast', 
-    {'latitude': '$latitude',
-     'longitude': '$longitude',
-     'current_weather': 'true'
+    final weatherUri = Uri.https(aBaseUrlWeather, 'v1/forecast', {
+      'latitude': '$latitude',
+      'longitude': '$longitude',
+      'current_weather': 'true',
+      'current': 'relative_humidity_2m',
     });
 
     try {
@@ -103,11 +103,22 @@ class OpenMeteoApiClient {
 
       final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
 
-      return Weather.fromJson(weatherJson);
+      // Extract humidity from current object if available
+      double? humidity;
+      if (bodyJson.containsKey('current')) {
+        final current = bodyJson['current'] as Map<String, dynamic>;
+        if (current.containsKey('relative_humidity_2m')) {
+          humidity = (current['relative_humidity_2m'] as num?)?.toDouble();
+        }
+      }
+
+      return Weather.fromJson({
+        ...weatherJson,
+        if (humidity != null) 'humidity': humidity,
+      });
     } on DioException {
       throw WeatherRequestFailure();
     }
-    
   }
 
   /// Close http client

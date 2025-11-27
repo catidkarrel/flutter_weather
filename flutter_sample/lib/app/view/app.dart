@@ -18,22 +18,20 @@ class WeatherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider(
       create: (_) => WeatherRepository(
-        baseUrlWeather: FlavorConfig.current.baseUrlWeather, 
-        baseUrlGeocoding: FlavorConfig.current.baseUrlGeocoding, 
-        enableLogs: FlavorConfig.current.enableLogs
+        baseUrlWeather: FlavorConfig.current.baseUrlWeather,
+        baseUrlGeocoding: FlavorConfig.current.baseUrlGeocoding,
+        enableLogs: FlavorConfig.current.enableLogs,
       ),
       dispose: (repository) => repository.dispose(),
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => WeatherCubit(
-              context.read<WeatherRepository>()
-            ),
+            create: (context) =>
+                WeatherCubit(context.read<WeatherRepository>()),
           ),
           BlocProvider(
-            create: (context) => FavoritesCubit(
-              context.read<WeatherRepository>()
-            ),
+            create: (context) =>
+                FavoritesCubit(context.read<WeatherRepository>()),
           ),
         ],
         child: const WeatherAppView(),
@@ -59,6 +57,17 @@ class _WeatherAppViewState extends State<WeatherAppView> {
     SettingsPage(),
   ];
 
+  void _onItemTapped(int index) {
+    setState(() => _selectedIndex = index);
+
+    // Load weather data when navigating to favorites page
+    if (index == 1) {
+      // Ignore the future since this is a fire-and-forget operation
+      // ignore: discarded_futures
+      context.read<FavoritesCubit>().loadWeatherForFavorites();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final seedColor = context.select(
@@ -77,7 +86,7 @@ class _WeatherAppViewState extends State<WeatherAppView> {
         body: _pages[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,
-          onTap: (i) => setState(() => _selectedIndex = i),
+          onTap: _onItemTapped,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.cloud),

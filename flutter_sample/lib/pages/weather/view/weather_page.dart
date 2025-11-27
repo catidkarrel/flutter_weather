@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
 import 'package:flutter_sample/pages/favorites/models/favorite_location.dart';
-import 'package:flutter_sample/pages/favorites/view/favorites_page.dart';
 import 'package:flutter_sample/pages/search/view/search_page.dart';
 import 'package:flutter_sample/pages/settings/view/settings_page.dart';
 import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
@@ -15,17 +14,42 @@ class WeatherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+
       /// App bar with settings and favorites buttons
       appBar: AppBar(
         actions: [
+          BlocBuilder<WeatherCubit, WeatherState>(
+            builder: (context, state) {
+              if (state.status == WeatherStatus.success) {
+                return IconButton(
+                  icon: const Icon(Icons.favorite),
+                  onPressed: () {
+                    context.read<FavoritesCubit>().addFavorite(
+                      FavoriteLocation(
+                        name: state.weather.location,
+                        latitude: state.weather.latitude,
+                        longitude: state.weather.longitude,
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Added to favorites')),
+                    );
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => Navigator.of(context).push<void>(
               /// Route to settings page
               SettingsPage.route(),
-            ))
+            ),
+          ),
         ],
       ),
+
       /// Body of weather page
       body: Center(
         child: BlocBuilder<WeatherCubit, WeatherState>(
@@ -39,19 +63,21 @@ class WeatherPage extends StatelessWidget {
                 units: state.temperatureUnits,
                 onRefresh: () {
                   return context.read<WeatherCubit>().refreshWeather();
-                }
-              )
+                },
+              ),
             };
-          }
+          },
         ),
       ),
+
       /// Floating action button for searching city
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search, semanticLabel: 'Search'),
         onPressed: () async {
           final city = await Navigator.of(context).push(
             /// Route to search page
-            SearchPage.route());
+            SearchPage.route(),
+          );
           if (!context.mounted) return;
           await context.read<WeatherCubit>().fetchWeather(city);
         },
