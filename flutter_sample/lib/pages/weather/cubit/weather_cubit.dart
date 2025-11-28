@@ -3,7 +3,7 @@ import 'package:flutter_sample/pages/weather/weather.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weather_repository/weather_repository.dart'
-    show WeatherRepository;
+    show WeatherRepository, Location;
 
 part 'weather_cubit.g.dart';
 part 'weather_state.dart';
@@ -28,15 +28,46 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       );
       final units = state.temperatureUnits;
       final value = units.isFahrenheit
-        ? weather.temperature.value.toFahrenheit()
-        : weather.temperature.value;
+          ? weather.temperature.value.toFahrenheit()
+          : weather.temperature.value;
 
       emit(
         state.copyWith(
           status: WeatherStatus.success,
           temperatureUnits: units,
-          weather: weather.copyWith(temperature: Temperature(value: value),)
-        )
+          weather: weather.copyWith(
+            temperature: Temperature(value: value),
+          ),
+        ),
+      );
+    } on Exception {
+      emit(state.copyWith(status: WeatherStatus.failure));
+    }
+  }
+
+  /// Fetch weather for a location
+  Future<void> fetchWeatherByLocation(Location location) async {
+    emit(state.copyWith(status: WeatherStatus.loading));
+
+    try {
+      final weather = Weather.fromRepository(
+        await _weatherRepository.getWeatherByCoordinates(
+          latitude: location.latitude,
+          longitude: location.longitude,
+          locationName: location.name,
+        ),
+      );
+      final units = state.temperatureUnits;
+      final value = units.isFahrenheit
+          ? weather.temperature.value.toFahrenheit()
+          : weather.temperature.value;
+
+      emit(
+        state.copyWith(
+          status: WeatherStatus.success,
+          temperatureUnits: units,
+          weather: weather.copyWith(temperature: Temperature(value: value)),
+        ),
       );
     } on Exception {
       emit(state.copyWith(status: WeatherStatus.failure));
@@ -53,8 +84,8 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       );
       final units = state.temperatureUnits;
       final value = units.isFahrenheit
-        ? weather.temperature.value.toFahrenheit()
-        : weather.temperature.value;
+          ? weather.temperature.value.toFahrenheit()
+          : weather.temperature.value;
 
       emit(
         state.copyWith(
@@ -71,8 +102,8 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
   /// Toggle temperature units
   void toggleUnits() {
     final units = state.temperatureUnits.isFahrenheit
-      ? TemperatureUnits.celsius
-      : TemperatureUnits.fahrenheit;
+        ? TemperatureUnits.celsius
+        : TemperatureUnits.fahrenheit;
 
     if (!state.status.isSuccess) {
       emit(state.copyWith(temperatureUnits: units));
@@ -83,21 +114,21 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
     if (weather != Weather.empty) {
       final temperature = weather.temperature;
       final value = units.isCelsius
-        ? temperature.value.toCelsius()
-        : temperature.value.toFahrenheit();
+          ? temperature.value.toCelsius()
+          : temperature.value.toFahrenheit();
       emit(
         state.copyWith(
           temperatureUnits: units,
           weather: weather.copyWith(temperature: Temperature(value: value)),
-        )
+        ),
       );
     }
   }
 
   /// JSON serialization for weather cubit
   @override
-  WeatherState fromJson(Map<String, dynamic> json) => 
-    WeatherState.fromJson(json);
+  WeatherState fromJson(Map<String, dynamic> json) =>
+      WeatherState.fromJson(json);
 
   /// JSON deserialization for weather cubit
   @override
@@ -107,7 +138,7 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
 /// Extension for temperature conversion
 extension TemperatureConversion on double {
   /// Convert temperature to Fahrenheit
-  double toFahrenheit() => (this * 9 /5) + 32;
+  double toFahrenheit() => (this * 9 / 5) + 32;
 
   /// Convert temperature to Celsius
   double toCelsius() => (this - 32) * 5 / 9;

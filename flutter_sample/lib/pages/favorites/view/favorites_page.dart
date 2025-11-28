@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
+import 'package:weather_repository/weather_repository.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});
@@ -43,7 +44,7 @@ class FavoritesPage extends StatelessWidget {
                 child: ListTile(
                   title: Text(location.name),
                   subtitle: Text(
-                    'Temp: ${weather.temperature}°C • ${weather.condition.name}',
+                    'Temp: ${weather.temperature}°C • ${weather.condition.toEmoji}',
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.remove_circle, color: Colors.red),
@@ -58,5 +59,22 @@ class FavoritesPage extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+extension on WeatherCondition {
+  String get toEmoji {
+    switch (this) {
+      case WeatherCondition.clear:
+        return '☀️';
+      case WeatherCondition.rainy:
+        return '🌧️';
+      case WeatherCondition.cloudy:
+        return '☁️';
+      case WeatherCondition.snowy:
+        return '🌨️';
+      case WeatherCondition.unknown:
+        return '❓';
+    }
   }
 }

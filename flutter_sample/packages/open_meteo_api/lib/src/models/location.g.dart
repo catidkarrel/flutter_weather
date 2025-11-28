@@ -15,6 +15,8 @@ Location _$LocationFromJson(Map<String, dynamic> json) =>
         name: $checkedConvert('name', (v) => v as String),
         latitude: $checkedConvert('latitude', (v) => (v as num).toDouble()),
         longitude: $checkedConvert('longitude', (v) => (v as num).toDouble()),
+        country: $checkedConvert('country', (v) => v as String?),
+        admin1: $checkedConvert('admin1', (v) => v as String?),
       );
       return val;
     });

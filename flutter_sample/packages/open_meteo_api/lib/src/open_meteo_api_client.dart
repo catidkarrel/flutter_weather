@@ -72,6 +72,36 @@ class OpenMeteoApiClient {
     }
   }
 
+  /// Search location suggestions by name
+  Future<List<Location>> locationSearchSuggestions(String query) async {
+    final locationUri = Uri.https(aBaseUrlGeocoding, '/v1/search', {
+      'name': query,
+      'count': '10',
+    });
+
+    try {
+      final locationResponse = await _dioClient.getUri(locationUri);
+
+      if (locationResponse.statusCode != 200) {
+        throw LocationRequestFailure();
+      }
+
+      final locationJson = locationResponse.data;
+
+      final resultsRaw = locationJson['results'];
+
+      if (resultsRaw is! List || resultsRaw.isEmpty) {
+        return [];
+      }
+
+      final results = resultsRaw.cast<Map<String, dynamic>>();
+
+      return results.map((e) => Location.fromJson(e)).toList();
+    } on DioException {
+      throw LocationRequestFailure();
+    }
+  }
+
   /// Get weather by latitude and longitude
   Future<Weather> getWeather({
     required double latitude,

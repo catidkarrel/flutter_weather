@@ -5,7 +5,8 @@ export 'weather_repository.dart';
 
 import 'dart:async';
 
-import 'package:open_meteo_api/open_meteo_api.dart' hide Weather;
+import 'package:open_meteo_api/open_meteo_api.dart' hide Weather, Location;
+import 'package:open_meteo_api/open_meteo_api.dart' as open_meteo show Location;
 import 'package:weather_repository/location_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 
@@ -98,6 +99,23 @@ class WeatherRepository {
       windDirection: weather.windDirection,
       humidity: weather.humidity,
     );
+  }
+
+  /// Search for locations
+  Future<List<Location>> searchLocations(String query) async {
+    final locations = await _weatherApiClient.locationSearchSuggestions(query);
+    return locations
+        .map(
+          (location) => Location(
+            id: location.id,
+            name: location.name,
+            latitude: location.latitude,
+            longitude: location.longitude,
+            country: location.country,
+            region: location.admin1,
+          ),
+        )
+        .toList();
   }
 
   /// Dispose weather api client

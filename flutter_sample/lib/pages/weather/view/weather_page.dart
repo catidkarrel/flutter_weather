@@ -74,12 +74,13 @@ class WeatherPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search, semanticLabel: 'Search'),
         onPressed: () async {
-          final city = await Navigator.of(context).push(
-            /// Route to search page
+          final location = await Navigator.of(context).push(
             SearchPage.route(),
           );
           if (!context.mounted) return;
-          await context.read<WeatherCubit>().fetchWeather(city);
+          if (location != null) {
+            await context.read<WeatherCubit>().fetchWeatherByLocation(location);
+          }
         },
       ),
     );

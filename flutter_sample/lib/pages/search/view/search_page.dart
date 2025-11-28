@@ -1,61 +1,113 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-/// Class definition for search page
-class SearchPage extends StatefulWidget {
-  /// Constructor for search page
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_repository/weather_repository.dart';
+import '../cubit/cubit.dart';
+
+class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 
-  /// Route for search page
-  static Route<String> route() {
+  static Route<Location> route() {
     return MaterialPageRoute(builder: (_) => const SearchPage());
   }
 
-  /// State for search page
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SearchCubit(context.read<WeatherRepository>()),
+      child: const SearchView(),
+    );
+  }
 }
 
-/// State for search page
-class _SearchPageState extends State<SearchPage> {
-  /// Text controller for search page
+class SearchView extends StatefulWidget {
+  const SearchView({super.key});
+
+  @override
+  State<SearchView> createState() => _SearchViewState();
+}
+
+class _SearchViewState extends State<SearchView> {
   final TextEditingController _textController = TextEditingController();
+  Timer? _debounce;
 
-  /// Text for search page
-  String get _text => _textController.text;
-
-  /// Dispose method for search page
   @override
   void dispose() {
     _textController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
-  /// Build method for search page
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      context.read<SearchCubit>().search(query);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('City Search')),
-      body: Row(
+      body: Column(
         children: [
-          /// Expanded text field for search page
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: TextField(
-                controller: _textController,
-                decoration: const InputDecoration(
-                  labelText: 'Location',
-                  hintText: 'Tokyo',
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _textController,
+              onChanged: _onSearchChanged,
+              decoration: InputDecoration(
+                labelText: 'Search Location',
+                hintText: 'Enter city name...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                filled: true,
+                // fillColor: Theme.of(context).inputDecorationTheme.fillColor, // Use default or theme
               ),
             ),
           ),
+          Expanded(
+            child: BlocBuilder<SearchCubit, SearchState>(
+              builder: (context, state) {
+                if (state.status == SearchStatus.loading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state.status == SearchStatus.failure) {
+                  return Center(child: Text(state.errorMessage ?? 'Error'));
+                }
+                if (state.results.isEmpty &&
+                    _textController.text.isNotEmpty &&
+                    state.status == SearchStatus.success) {
+                  return const Center(child: Text('No results found'));
+                }
 
-          /// Search button for search page
-          IconButton(
-            key: const Key('searchPage_search_iconButton'),
-            icon: const Icon(Icons.search, semanticLabel: 'Submit'),
-            onPressed: () => Navigator.of(context).pop(_text),
+                return ListView.builder(
+                  itemCount: state.results.length,
+                  itemBuilder: (context, index) {
+                    final location = state.results[index];
+                    final subtitle = [
+                      location.region,
+                      location.country,
+                    ].where((e) => e != null && e.isNotEmpty).join(', ');
+
+                    return ListTile(
+                      title: Text(
+                        location.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () {
+                        Navigator.of(context).pop(location);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
