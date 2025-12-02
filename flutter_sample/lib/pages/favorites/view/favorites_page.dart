@@ -4,7 +4,9 @@ import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
 import 'package:weather_repository/weather_repository.dart';
 
 class FavoritesPage extends StatelessWidget {
-  const FavoritesPage({super.key});
+  const FavoritesPage({super.key, this.onLocationSelected});
+
+  final ValueChanged<String>? onLocationSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +40,11 @@ class FavoritesPage extends StatelessWidget {
                   context.read<FavoritesCubit>().removeFavorite(location.name);
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Removed ${location.name}')),
+                    SnackBar(content: Text('Removed Location: ${location.name}')),
                   );
                 },
                 child: ListTile(
+                  onTap: () => onLocationSelected?.call(location.name),
                   title: Text(location.name),
                   subtitle: Text(
                     'Temp: ${weather.temperature}°C • ${weather.condition.toEmoji}',

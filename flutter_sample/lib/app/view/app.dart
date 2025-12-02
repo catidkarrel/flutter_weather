@@ -51,10 +51,17 @@ class WeatherAppView extends StatefulWidget {
 class _WeatherAppViewState extends State<WeatherAppView> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    WeatherPage(),
-    FavoritesPage(),
-    SettingsPage(),
+  List<Widget> get _pages => [
+    const WeatherPage(),
+    FavoritesPage(
+      onLocationSelected: (locationName) async {
+        // Fetch weather for the selected location
+        await context.read<WeatherCubit>().fetchWeather(locationName);
+        // Navigate to weather page
+        setState(() => _selectedIndex = 0);
+      },
+    ),
+    const SettingsPage(),
   ];
 
   void _onItemTapped(int index) {

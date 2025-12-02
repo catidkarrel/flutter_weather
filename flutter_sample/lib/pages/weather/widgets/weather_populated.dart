@@ -43,7 +43,7 @@ class WeatherPopulated extends StatelessWidget {
                         weather.location,
                         style: theme.textTheme.displayMedium?.copyWith(
                           fontWeight: FontWeight.w200,
-                      ),
+                        ),
                       textAlign: TextAlign.center,
                       ),
                     ),
