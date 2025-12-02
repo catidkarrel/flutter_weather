@@ -24,13 +24,17 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
         'wind_direction',
         (v) => (v as num?)?.toDouble(),
       ),
-      humidity: $checkedConvert('humidity', (v) => (v as num?)?.toDouble()),
+      apparentTemperature: $checkedConvert(
+        'apparent_temperature',
+        (v) => (v as num?)?.toDouble(),
+      ),
     );
     return val;
   },
   fieldKeyMap: const {
     'windSpeed': 'wind_speed',
     'windDirection': 'wind_direction',
+    'apparentTemperature': 'apparent_temperature',
   },
 );
 
@@ -42,7 +46,7 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
   'longitude': instance.longitude,
   'wind_speed': instance.windSpeed,
   'wind_direction': instance.windDirection,
-  'humidity': instance.humidity,
+  'apparent_temperature': instance.apparentTemperature,
 };
 
 const _$WeatherConditionEnumMap = {

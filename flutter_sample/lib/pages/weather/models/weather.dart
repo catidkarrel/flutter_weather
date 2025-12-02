@@ -39,7 +39,6 @@ class Weather extends Equatable {
     required this.longitude,
     this.windSpeed,
     this.windDirection,
-    this.humidity,
     this.apparentTemperature,
   });
 
@@ -56,7 +55,6 @@ class Weather extends Equatable {
       longitude: weather.longitude.toString(),
       windSpeed: weather.windSpeed,
       windDirection: weather.windDirection,
-      humidity: weather.humidity,
       apparentTemperature: weather.apparentTemperature,
     );
   }
@@ -78,7 +76,6 @@ class Weather extends Equatable {
   final String longitude;
   final double? windSpeed;
   final double? windDirection;
-  final double? humidity;
   final double? apparentTemperature;
 
   @override
@@ -89,7 +86,6 @@ class Weather extends Equatable {
     temperature,
     windSpeed,
     windDirection,
-    humidity,
     apparentTemperature,
   ];
 
@@ -104,7 +100,6 @@ class Weather extends Equatable {
     String? longitude,
     double? windSpeed,
     double? windDirection,
-    double? humidity,
     double? apparentTemperature,
   }) {
     return Weather(
@@ -116,7 +111,6 @@ class Weather extends Equatable {
       longitude: longitude ?? this.longitude,
       windSpeed: windSpeed ?? this.windSpeed,
       windDirection: windDirection ?? this.windDirection,
-      humidity: humidity ?? this.humidity,
       apparentTemperature: apparentTemperature ?? this.apparentTemperature,
     );
   }

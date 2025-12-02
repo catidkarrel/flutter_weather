@@ -15,7 +15,6 @@ class Weather extends Equatable {
     required this.longitude,
     this.windSpeed,
     this.windDirection,
-    this.humidity,
     this.apparentTemperature,
   });
 
@@ -31,7 +30,6 @@ class Weather extends Equatable {
   final String longitude;
   final double? windSpeed;
   final double? windDirection;
-  final double? humidity;
   final double? apparentTemperature;
 
   @override
@@ -41,7 +39,6 @@ class Weather extends Equatable {
     condition,
     windSpeed,
     windDirection,
-    humidity,
     apparentTemperature,
   ];
 }

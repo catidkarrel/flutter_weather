@@ -10,7 +10,6 @@ class Weather {
     required this.weatherCode,
     this.windSpeed,
     this.windDirection,
-    this.humidity,
     this.apparentTemperature,
   });
 
@@ -22,19 +21,16 @@ class Weather {
   final double temperature;
 
   /// Weather code
-  @JsonKey(name: 'weathercode')
+  @JsonKey(name: 'weather_code')
   final double weatherCode;
 
   /// Wind speed in km/h
-  @JsonKey(name: 'windspeed')
+  @JsonKey(name: 'wind_speed_10m')
   final double? windSpeed;
 
   /// Wind direction in degrees
-  @JsonKey(name: 'winddirection')
+  @JsonKey(name: 'wind_direction_10m')
   final double? windDirection;
-
-  /// Relative humidity in %
-  final double? humidity;
 
   /// Apparent temperature in celsius
   @JsonKey(name: 'apparent_temperature')

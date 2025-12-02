@@ -56,7 +56,6 @@ class WeatherRepository {
         longitude: position.longitude.toString(),
         windSpeed: weather.windSpeed,
         windDirection: weather.windDirection,
-        humidity: weather.humidity,
         apparentTemperature: weather.apparentTemperature,
       );
     } on ApiException {
@@ -84,7 +83,6 @@ class WeatherRepository {
         longitude: location.longitude.toString(),
         windSpeed: weather.windSpeed,
         windDirection: weather.windDirection,
-        humidity: weather.humidity,
         apparentTemperature: weather.apparentTemperature,
       );
     } on ApiException {
@@ -113,7 +111,6 @@ class WeatherRepository {
         longitude: longitude.toString(),
         windSpeed: weather.windSpeed,
         windDirection: weather.windDirection,
-        humidity: weather.humidity,
         apparentTemperature: weather.apparentTemperature,
       );
     } on ApiException {

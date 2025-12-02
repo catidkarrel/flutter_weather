@@ -186,8 +186,8 @@ class OpenMeteoApiClient {
       final weatherUri = Uri.https(aBaseUrlWeather, 'v1/forecast', {
         'latitude': '$latitude',
         'longitude': '$longitude',
-        'current_weather': 'true',
-        'current': 'relative_humidity_2m,apparent_temperature',
+        'current':
+            'temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code',
       });
 
       final weatherResponse = await _dioClient.getUri(weatherUri);
@@ -198,32 +198,31 @@ class OpenMeteoApiClient {
 
       final bodyJson = weatherResponse.data;
 
-      if (!bodyJson.containsKey('current_weather')) {
+      if (!bodyJson.containsKey('current')) {
         throw WeatherDataNotFoundException();
       }
 
-      final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
+      final current = bodyJson['current'] as Map<String, dynamic>;
 
-      // Extract humidity and apparent temperature from current object if available
-      double? humidity;
-      double? apparentTemperature;
-      if (bodyJson.containsKey('current')) {
-        final current = bodyJson['current'] as Map<String, dynamic>;
-        if (current.containsKey('relative_humidity_2m')) {
-          humidity = (current['relative_humidity_2m'] as num?)?.toDouble();
-        }
-        if (current.containsKey('apparent_temperature')) {
-          apparentTemperature = (current['apparent_temperature'] as num?)
-              ?.toDouble();
-        }
+      // Extract weather data from current object
+      final temperature = (current['temperature_2m'] as num?)?.toDouble();
+      final apparentTemperature = (current['apparent_temperature'] as num?)
+          ?.toDouble();
+      final windSpeed = (current['wind_speed_10m'] as num?)?.toDouble();
+      final windDirection = (current['wind_direction_10m'] as num?)?.toDouble();
+      final weatherCode = (current['weather_code'] as num?)?.toDouble();
+
+      if (temperature == null || weatherCode == null) {
+        throw WeatherDataNotFoundException();
       }
 
-      return Weather.fromJson({
-        ...weatherJson,
-        if (humidity != null) 'humidity': humidity,
-        if (apparentTemperature != null)
-          'apparent_temperature': apparentTemperature,
-      });
+      return Weather(
+        temperature: temperature,
+        weatherCode: weatherCode,
+        windSpeed: windSpeed,
+        windDirection: windDirection,
+        apparentTemperature: apparentTemperature,
+      );
     });
   }
 
