@@ -26,9 +26,9 @@ jobs:
       #   run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze project source
-        working-directory: my_project
+        working-directory: flutter_sample
         run: dart analyze
 
       - name: Run tests
-        working-directory: my_project
+        working-directory: flutter_sample
         run: dart test
