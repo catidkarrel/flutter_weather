@@ -1,4 +1,4 @@
-name: Dart
+name: Flutter
 
 on:
   push:
@@ -13,22 +13,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Setup Dart SDK
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      # Setup Flutter SDK
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: stable
 
       - name: Install dependencies
         working-directory: flutter_sample
-        run: dart pub get
+        run: flutter pub get
 
-      # Uncomment this step to verify the use of 'dart format' on each commit.
+      # Uncomment to check code formatting
       # - name: Verify formatting
-      #   working-directory: my_project
-      #   run: dart format --output=none --set-exit-if-changed .
+      #   working-directory: flutter_sample
+      #   run: flutter format --set-exit-if-changed .
 
       - name: Analyze project source
         working-directory: flutter_sample
-        run: dart analyze
+        run: flutter analyze
 
       - name: Run tests
         working-directory: flutter_sample
-        run: dart test
+        run: flutter test
