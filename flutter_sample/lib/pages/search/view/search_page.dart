@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/pages/search/cubit/cubit.dart';
 import 'package:weather_repository/weather_repository.dart';
-import '../cubit/cubit.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -42,7 +42,7 @@ class _SearchViewState extends State<SearchView> {
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      context.read<SearchCubit>().search(query);
+      unawaited(context.read<SearchCubit>().search(query));
     });
   }
 
@@ -53,7 +53,7 @@ class _SearchViewState extends State<SearchView> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: TextField(
               controller: _textController,
               onChanged: _onSearchChanged,

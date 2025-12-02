@@ -38,46 +38,60 @@ class WeatherRepository {
 
   /// Get weather by current location
   Future<Weather> getWeatherByLocation() async {
-    final position = await _locationRepository.getCurrentPosition();
-    final location = await _locationRepository.getPlaceNameFromCoordinates(
-      position.latitude,
-      position.longitude,
-    );
-    final weather = await _weatherApiClient.getWeather(
-      latitude: position.latitude,
-      longitude: position.longitude,
-    );
-    return Weather(
-      location: location,
-      temperature: weather.temperature,
-      condition: weather.weatherCode.toInt().toCondition,
-      latitude: position.latitude.toString(),
-      longitude: position.longitude.toString(),
-      windSpeed: weather.windSpeed,
-      windDirection: weather.windDirection,
-      humidity: weather.humidity,
-      apparentTemperature: weather.apparentTemperature,
-    );
+    try {
+      final position = await _locationRepository.getCurrentPosition();
+      final location = await _locationRepository.getPlaceNameFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      final weather = await _weatherApiClient.getWeather(
+        latitude: position.latitude,
+        longitude: position.longitude,
+      );
+      return Weather(
+        location: location,
+        temperature: weather.temperature,
+        condition: weather.weatherCode.toInt().toCondition,
+        latitude: position.latitude.toString(),
+        longitude: position.longitude.toString(),
+        windSpeed: weather.windSpeed,
+        windDirection: weather.windDirection,
+        humidity: weather.humidity,
+        apparentTemperature: weather.apparentTemperature,
+      );
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(
+        message: 'Failed to get weather for current location: $e',
+      );
+    }
   }
 
   /// Get weather by city name
   Future<Weather> getWeather(String city) async {
-    final location = await _weatherApiClient.locationSearch(city);
-    final weather = await _weatherApiClient.getWeather(
-      latitude: location.latitude,
-      longitude: location.longitude,
-    );
-    return Weather(
-      temperature: weather.temperature,
-      location: location.name,
-      condition: weather.weatherCode.toInt().toCondition,
-      latitude: location.latitude.toString(),
-      longitude: location.longitude.toString(),
-      windSpeed: weather.windSpeed,
-      windDirection: weather.windDirection,
-      humidity: weather.humidity,
-      apparentTemperature: weather.apparentTemperature,
-    );
+    try {
+      final location = await _weatherApiClient.locationSearch(city);
+      final weather = await _weatherApiClient.getWeather(
+        latitude: location.latitude,
+        longitude: location.longitude,
+      );
+      return Weather(
+        temperature: weather.temperature,
+        location: location.name,
+        condition: weather.weatherCode.toInt().toCondition,
+        latitude: location.latitude.toString(),
+        longitude: location.longitude.toString(),
+        windSpeed: weather.windSpeed,
+        windDirection: weather.windDirection,
+        humidity: weather.humidity,
+        apparentTemperature: weather.apparentTemperature,
+      );
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: 'Failed to get weather for $city: $e');
+    }
   }
 
   /// Get weather by coordinates
@@ -86,38 +100,54 @@ class WeatherRepository {
     required double longitude,
     required String locationName,
   }) async {
-    final weather = await _weatherApiClient.getWeather(
-      latitude: latitude,
-      longitude: longitude,
-    );
-    return Weather(
-      temperature: weather.temperature,
-      location: locationName,
-      condition: weather.weatherCode.toInt().toCondition,
-      latitude: latitude.toString(),
-      longitude: longitude.toString(),
-      windSpeed: weather.windSpeed,
-      windDirection: weather.windDirection,
-      humidity: weather.humidity,
-      apparentTemperature: weather.apparentTemperature,
-    );
+    try {
+      final weather = await _weatherApiClient.getWeather(
+        latitude: latitude,
+        longitude: longitude,
+      );
+      return Weather(
+        temperature: weather.temperature,
+        location: locationName,
+        condition: weather.weatherCode.toInt().toCondition,
+        latitude: latitude.toString(),
+        longitude: longitude.toString(),
+        windSpeed: weather.windSpeed,
+        windDirection: weather.windDirection,
+        humidity: weather.humidity,
+        apparentTemperature: weather.apparentTemperature,
+      );
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: 'Failed to get weather for coordinates: $e');
+    }
   }
 
   /// Search for locations
   Future<List<Location>> searchLocations(String query) async {
-    final locations = await _weatherApiClient.locationSearchSuggestions(query);
-    return locations
-        .map(
-          (location) => Location(
-            id: location.id,
-            name: location.name,
-            latitude: location.latitude,
-            longitude: location.longitude,
-            country: location.country,
-            region: location.admin1,
-          ),
-        )
-        .toList();
+    try {
+      final locations = await _weatherApiClient.locationSearchSuggestions(
+        query,
+      );
+      return locations
+          .map(
+            (location) => Location(
+              id: location.id,
+              name: location.name,
+              latitude: location.latitude,
+              longitude: location.longitude,
+              country: location.country,
+              region: location.admin1,
+            ),
+          )
+          .toList();
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(
+        message: 'Failed to search locations for "$query": $e',
+      );
+    }
   }
 
   /// Dispose weather api client
