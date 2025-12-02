@@ -35,16 +35,19 @@ class WeatherPopulated extends StatelessWidget {
                 children: [
                   const SizedBox(height: 48),
                   _WeatherIcon(condition: weather.condition),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      weather.location,
-                      style: theme.textTheme.displayMedium?.copyWith(
-                        fontWeight: FontWeight.w200,
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        weather.location,
+                        style: theme.textTheme.displayMedium?.copyWith(
+                          fontWeight: FontWeight.w200,
                       ),
                       textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
+                  ),                  
                   Text(
                     weather.formattedTemperature(units),
                     style: theme.textTheme.displaySmall?.copyWith(
@@ -55,7 +58,7 @@ class WeatherPopulated extends StatelessWidget {
                     '''Last Updated at ${TimeOfDay.fromDateTime(weather.lastUpdated).format(context)}''',
                   ),
                   const SizedBox(height: 24),
-                  _WeatherDetails(weather: weather),
+                  _WeatherDetails(weather: weather, units: units),
                 ],
               ),
             ),
@@ -67,9 +70,10 @@ class WeatherPopulated extends StatelessWidget {
 }
 
 class _WeatherDetails extends StatelessWidget {
-  const _WeatherDetails({required this.weather});
+  const _WeatherDetails({required this.weather, required this.units});
 
   final Weather weather;
+  final TemperatureUnits units;
 
   @override
   Widget build(BuildContext context) {
@@ -108,10 +112,10 @@ class _WeatherDetails extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _DetailItem(
-                icon: Icons.water_drop,
-                label: 'Humidity',
-                value: weather.humidity != null
-                    ? '${weather.humidity!.toStringAsFixed(0)}%'
+                icon: Icons.thermostat,
+                label: 'Feels Like',
+                value: weather.apparentTemperature != null
+                    ? '''${weather.apparentTemperature!.toStringAsPrecision(2)}°${units.isCelsius ? 'C' : 'F'}'''
                     : 'N/A',
               ),
               _DetailItem(
@@ -142,7 +146,7 @@ class _WindDirectionItem extends StatelessWidget {
     final index = ((degrees + 22.5) / 45).floor() % 8;
     return directions[index];
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

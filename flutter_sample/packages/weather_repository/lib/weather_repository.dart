@@ -6,7 +6,6 @@ export 'weather_repository.dart';
 import 'dart:async';
 
 import 'package:open_meteo_api/open_meteo_api.dart' hide Weather, Location;
-import 'package:open_meteo_api/open_meteo_api.dart' as open_meteo show Location;
 import 'package:weather_repository/location_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 
@@ -57,6 +56,7 @@ class WeatherRepository {
       windSpeed: weather.windSpeed,
       windDirection: weather.windDirection,
       humidity: weather.humidity,
+      apparentTemperature: weather.apparentTemperature,
     );
   }
 
@@ -76,6 +76,7 @@ class WeatherRepository {
       windSpeed: weather.windSpeed,
       windDirection: weather.windDirection,
       humidity: weather.humidity,
+      apparentTemperature: weather.apparentTemperature,
     );
   }
 
@@ -98,6 +99,7 @@ class WeatherRepository {
       windSpeed: weather.windSpeed,
       windDirection: weather.windDirection,
       humidity: weather.humidity,
+      apparentTemperature: weather.apparentTemperature,
     );
   }
 

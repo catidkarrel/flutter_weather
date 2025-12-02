@@ -111,7 +111,7 @@ class OpenMeteoApiClient {
       'latitude': '$latitude',
       'longitude': '$longitude',
       'current_weather': 'true',
-      'current': 'relative_humidity_2m',
+      'current': 'relative_humidity_2m,apparent_temperature',
     });
 
     try {
@@ -133,18 +133,25 @@ class OpenMeteoApiClient {
 
       final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
 
-      // Extract humidity from current object if available
+      // Extract humidity and apparent temperature from current object if available
       double? humidity;
+      double? apparentTemperature;
       if (bodyJson.containsKey('current')) {
         final current = bodyJson['current'] as Map<String, dynamic>;
         if (current.containsKey('relative_humidity_2m')) {
           humidity = (current['relative_humidity_2m'] as num?)?.toDouble();
+        }
+        if (current.containsKey('apparent_temperature')) {
+          apparentTemperature = (current['apparent_temperature'] as num?)
+              ?.toDouble();
         }
       }
 
       return Weather.fromJson({
         ...weatherJson,
         if (humidity != null) 'humidity': humidity,
+        if (apparentTemperature != null)
+          'apparent_temperature': apparentTemperature,
       });
     } on DioException {
       throw WeatherRequestFailure();

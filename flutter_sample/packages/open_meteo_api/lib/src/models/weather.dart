@@ -11,6 +11,7 @@ class Weather {
     this.windSpeed,
     this.windDirection,
     this.humidity,
+    this.apparentTemperature,
   });
 
   /// Factory constructor for creating Weather instance from json
@@ -34,4 +35,8 @@ class Weather {
 
   /// Relative humidity in %
   final double? humidity;
+
+  /// Apparent temperature in celsius
+  @JsonKey(name: 'apparent_temperature')
+  final double? apparentTemperature;
 }

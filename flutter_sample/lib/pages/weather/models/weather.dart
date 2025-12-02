@@ -40,6 +40,7 @@ class Weather extends Equatable {
     this.windSpeed,
     this.windDirection,
     this.humidity,
+    this.apparentTemperature,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
@@ -56,6 +57,7 @@ class Weather extends Equatable {
       windSpeed: weather.windSpeed,
       windDirection: weather.windDirection,
       humidity: weather.humidity,
+      apparentTemperature: weather.apparentTemperature,
     );
   }
 
@@ -77,6 +79,7 @@ class Weather extends Equatable {
   final double? windSpeed;
   final double? windDirection;
   final double? humidity;
+  final double? apparentTemperature;
 
   @override
   List<Object?> get props => [
@@ -87,6 +90,7 @@ class Weather extends Equatable {
     windSpeed,
     windDirection,
     humidity,
+    apparentTemperature,
   ];
 
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
@@ -101,6 +105,7 @@ class Weather extends Equatable {
     double? windSpeed,
     double? windDirection,
     double? humidity,
+    double? apparentTemperature,
   }) {
     return Weather(
       condition: condition ?? this.condition,
@@ -112,6 +117,7 @@ class Weather extends Equatable {
       windSpeed: windSpeed ?? this.windSpeed,
       windDirection: windDirection ?? this.windDirection,
       humidity: humidity ?? this.humidity,
+      apparentTemperature: apparentTemperature ?? this.apparentTemperature,
     );
   }
 }

@@ -37,6 +37,9 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
           temperatureUnits: units,
           weather: weather.copyWith(
             temperature: Temperature(value: value),
+            apparentTemperature: units.isFahrenheit
+                ? weather.apparentTemperature?.toFahrenheit()
+                : weather.apparentTemperature,
           ),
         ),
       );
@@ -66,7 +69,12 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
         state.copyWith(
           status: WeatherStatus.success,
           temperatureUnits: units,
-          weather: weather.copyWith(temperature: Temperature(value: value)),
+          weather: weather.copyWith(
+            temperature: Temperature(value: value),
+            apparentTemperature: units.isFahrenheit
+                ? weather.apparentTemperature?.toFahrenheit()
+                : weather.apparentTemperature,
+          ),
         ),
       );
     } on Exception {
@@ -91,7 +99,12 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
         state.copyWith(
           status: WeatherStatus.success,
           temperatureUnits: units,
-          weather: weather.copyWith(temperature: Temperature(value: value)),
+          weather: weather.copyWith(
+            temperature: Temperature(value: value),
+            apparentTemperature: units.isFahrenheit
+                ? weather.apparentTemperature?.toFahrenheit()
+                : weather.apparentTemperature,
+          ),
         ),
       );
     } on Exception {
@@ -119,7 +132,12 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
       emit(
         state.copyWith(
           temperatureUnits: units,
-          weather: weather.copyWith(temperature: Temperature(value: value)),
+          weather: weather.copyWith(
+            temperature: Temperature(value: value),
+            apparentTemperature: units.isCelsius
+                ? weather.apparentTemperature?.toCelsius()
+                : weather.apparentTemperature?.toFahrenheit(),
+          ),
         ),
       );
     }
