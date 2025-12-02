@@ -44,10 +44,10 @@ class WeatherPopulated extends StatelessWidget {
                         style: theme.textTheme.displayMedium?.copyWith(
                           fontWeight: FontWeight.w200,
                         ),
-                      textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ),                  
+                  ),
                   Text(
                     weather.formattedTemperature(units),
                     style: theme.textTheme.displaySmall?.copyWith(

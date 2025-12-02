@@ -6,6 +6,7 @@ import 'package:flutter_sample/pages/search/view/search_page.dart';
 import 'package:flutter_sample/pages/settings/view/settings_page.dart';
 import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
 import 'package:flutter_sample/pages/weather/widgets/widgets.dart';
+import 'package:weather_repository/weather_repository.dart';
 
 class WeatherPage extends StatelessWidget {
   const WeatherPage({super.key});
@@ -21,18 +22,29 @@ class WeatherPage extends StatelessWidget {
           BlocBuilder<WeatherCubit, WeatherState>(
             builder: (context, state) {
               if (state.status == WeatherStatus.success) {
-                return IconButton(
-                  icon: const Icon(Icons.favorite),
-                  onPressed: () {
-                    context.read<FavoritesCubit>().addFavorite(
-                      FavoriteLocation(
-                        name: state.weather.location,
-                        latitude: state.weather.latitude,
-                        longitude: state.weather.longitude,
-                      ),
+                return BlocBuilder<FavoritesCubit, FavoritesState>(
+                  builder: (context, favoritesState) {
+                    final isFavorite = favoritesState.favorites.any(
+                      (location) => location.name == state.weather.location,
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Added to favorites')),
+                    return IconButton(
+                      icon: const Icon(Icons.favorite),
+                      onPressed: isFavorite
+                          ? null
+                          : () {
+                              context.read<FavoritesCubit>().addFavorite(
+                                FavoriteLocation(
+                                  name: state.weather.location,
+                                  latitude: state.weather.latitude,
+                                  longitude: state.weather.longitude,
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Added to favorites'),
+                                ),
+                              );
+                            },
                     );
                   },
                 );

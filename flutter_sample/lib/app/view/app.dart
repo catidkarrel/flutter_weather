@@ -51,14 +51,29 @@ class WeatherAppView extends StatefulWidget {
   State<WeatherAppView> createState() => _WeatherAppViewState();
 }
 
-class _WeatherAppViewState extends State<WeatherAppView> {
+class _WeatherAppViewState extends State<WeatherAppView>
+    with WidgetsBindingObserver {
   int _selectedIndex = 0;
   bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     unawaited(_initializeApp());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<WeatherCubit>().refreshWeather();
+    }
   }
 
   Future<void> _initializeApp() async {

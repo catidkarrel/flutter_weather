@@ -3,7 +3,7 @@ import 'package:flutter_sample/pages/weather/weather.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weather_repository/weather_repository.dart'
-    show WeatherRepository, Location;
+    show Location, WeatherRepository;
 
 part 'weather_cubit.g.dart';
 part 'weather_state.dart';
