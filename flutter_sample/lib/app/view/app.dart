@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/flavor_config.dart';
 import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
 import 'package:flutter_sample/pages/favorites/view/favorites_page.dart';
 import 'package:flutter_sample/pages/settings/view/settings_page.dart';
+import 'package:flutter_sample/pages/splash/splash.dart';
 import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
 import 'package:flutter_sample/pages/weather/view/weather_page.dart';
 import 'package:flutter_sample/pages/weather/weather.dart';
@@ -50,6 +53,21 @@ class WeatherAppView extends StatefulWidget {
 
 class _WeatherAppViewState extends State<WeatherAppView> {
   int _selectedIndex = 0;
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_initializeApp());
+  }
+
+  Future<void> _initializeApp() async {
+    // Show splash screen for minimum duration
+    await Future<void>.delayed(const Duration(seconds: 2));
+    if (mounted) {
+      setState(() => _isInitialized = true);
+    }
+  }
 
   List<Widget> get _pages => [
     const WeatherPage(),
@@ -77,6 +95,14 @@ class _WeatherAppViewState extends State<WeatherAppView> {
 
   @override
   Widget build(BuildContext context) {
+    // Show splash screen during initialization
+    if (!_isInitialized) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: FlavorConfig.current.enableLogs,
+        home: const SplashPage(),
+      );
+    }
+
     final seedColor = context.select(
       (WeatherCubit cubit) => cubit.state.weather.toColor,
     );
