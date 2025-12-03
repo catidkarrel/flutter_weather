@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/flavor_config.dart';
 import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
@@ -72,7 +73,7 @@ class _WeatherAppViewState extends State<WeatherAppView>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.read<WeatherCubit>().refreshWeather();
+      unawaited(context.read<WeatherCubit>().refreshWeather());
     }
   }
 
@@ -127,28 +128,40 @@ class _WeatherAppViewState extends State<WeatherAppView>
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+          ),
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: seedColor),
       ),
-      home: Scaffold(
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.cloud),
-              label: 'Weather',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: 'Favorites',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
+        child: Scaffold(
+          body: _pages[_selectedIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.cloud),
+                label: 'Weather',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite),
+                label: 'Favorites',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Settings',
+              ),
+            ],
+          ),
         ),
       ),
     );
