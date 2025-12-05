@@ -30,6 +30,14 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
         'apparent_temperature',
         (v) => (v as num?)?.toDouble(),
       ),
+      daily: $checkedConvert(
+        'daily',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => DailyForecast.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            const [],
+      ),
     );
     return val;
   },
@@ -40,3 +48,26 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
     'apparentTemperature': 'apparent_temperature',
   },
 );
+
+DailyForecast _$DailyForecastFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'DailyForecast',
+      json,
+      ($checkedConvert) {
+        final val = DailyForecast(
+          date: $checkedConvert('date', (v) => v as String),
+          weatherCode: $checkedConvert(
+            'weather_code',
+            (v) => (v as num).toDouble(),
+          ),
+          maxTemp: $checkedConvert('max_temp', (v) => (v as num).toDouble()),
+          minTemp: $checkedConvert('min_temp', (v) => (v as num).toDouble()),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'weatherCode': 'weather_code',
+        'maxTemp': 'max_temp',
+        'minTemp': 'min_temp',
+      },
+    );

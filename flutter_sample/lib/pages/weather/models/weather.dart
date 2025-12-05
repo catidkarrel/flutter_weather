@@ -40,6 +40,7 @@ class Weather extends Equatable {
     this.windSpeed,
     this.windDirection,
     this.apparentTemperature,
+    this.daily = const [],
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
@@ -56,6 +57,16 @@ class Weather extends Equatable {
       windSpeed: weather.windSpeed,
       windDirection: weather.windDirection,
       apparentTemperature: weather.apparentTemperature,
+      daily: weather.daily
+          .map(
+            (d) => DailyForecast(
+              date: d.date,
+              condition: d.condition,
+              maxTemp: Temperature(value: d.maxTemp),
+              minTemp: Temperature(value: d.minTemp),
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -77,6 +88,7 @@ class Weather extends Equatable {
   final double? windSpeed;
   final double? windDirection;
   final double? apparentTemperature;
+  final List<DailyForecast> daily;
 
   @override
   List<Object?> get props => [
@@ -87,6 +99,7 @@ class Weather extends Equatable {
     windSpeed,
     windDirection,
     apparentTemperature,
+    daily,
   ];
 
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
@@ -101,6 +114,7 @@ class Weather extends Equatable {
     double? windSpeed,
     double? windDirection,
     double? apparentTemperature,
+    List<DailyForecast>? daily,
   }) {
     return Weather(
       condition: condition ?? this.condition,
@@ -112,6 +126,30 @@ class Weather extends Equatable {
       windSpeed: windSpeed ?? this.windSpeed,
       windDirection: windDirection ?? this.windDirection,
       apparentTemperature: apparentTemperature ?? this.apparentTemperature,
+      daily: daily ?? this.daily,
     );
   }
+}
+
+@JsonSerializable()
+class DailyForecast extends Equatable {
+  const DailyForecast({
+    required this.date,
+    required this.condition,
+    required this.maxTemp,
+    required this.minTemp,
+  });
+
+  factory DailyForecast.fromJson(Map<String, dynamic> json) =>
+      _$DailyForecastFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DailyForecastToJson(this);
+
+  final String date;
+  final WeatherCondition condition;
+  final Temperature maxTemp;
+  final Temperature minTemp;
+
+  @override
+  List<Object?> get props => [date, condition, maxTemp, minTemp];
 }

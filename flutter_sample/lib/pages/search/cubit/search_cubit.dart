@@ -23,7 +23,7 @@ class SearchCubit extends Cubit<SearchState> {
           results: results,
         ),
       );
-    } catch (e) {
+    } on Exception {
       emit(
         state.copyWith(
           status: SearchStatus.failure,

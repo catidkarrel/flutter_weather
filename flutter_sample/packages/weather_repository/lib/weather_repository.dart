@@ -5,7 +5,8 @@ export 'weather_repository.dart';
 
 import 'dart:async';
 
-import 'package:open_meteo_api/open_meteo_api.dart' hide Weather, Location;
+import 'package:open_meteo_api/open_meteo_api.dart'
+    hide Weather, Location, DailyForecast;
 import 'package:weather_repository/location_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 
@@ -57,6 +58,16 @@ class WeatherRepository {
         windSpeed: weather.windSpeed,
         windDirection: weather.windDirection,
         apparentTemperature: weather.apparentTemperature,
+        daily: weather.daily
+            .map(
+              (d) => DailyForecast(
+                date: d.date,
+                condition: d.weatherCode.toInt().toCondition,
+                maxTemp: d.maxTemp,
+                minTemp: d.minTemp,
+              ),
+            )
+            .toList(),
       );
     } on ApiException {
       rethrow;
@@ -84,6 +95,16 @@ class WeatherRepository {
         windSpeed: weather.windSpeed,
         windDirection: weather.windDirection,
         apparentTemperature: weather.apparentTemperature,
+        daily: weather.daily
+            .map(
+              (d) => DailyForecast(
+                date: d.date,
+                condition: d.weatherCode.toInt().toCondition,
+                maxTemp: d.maxTemp,
+                minTemp: d.minTemp,
+              ),
+            )
+            .toList(),
       );
     } on ApiException {
       rethrow;
@@ -112,6 +133,16 @@ class WeatherRepository {
         windSpeed: weather.windSpeed,
         windDirection: weather.windDirection,
         apparentTemperature: weather.apparentTemperature,
+        daily: weather.daily
+            .map(
+              (d) => DailyForecast(
+                date: d.date,
+                condition: d.weatherCode.toInt().toCondition,
+                maxTemp: d.maxTemp,
+                minTemp: d.minTemp,
+              ),
+            )
+            .toList(),
       );
     } on ApiException {
       rethrow;

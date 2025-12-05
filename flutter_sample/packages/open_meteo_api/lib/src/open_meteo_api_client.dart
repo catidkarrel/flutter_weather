@@ -188,6 +188,7 @@ class OpenMeteoApiClient {
         'longitude': '$longitude',
         'current':
             'temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code',
+        'daily': 'weather_code,temperature_2m_max,temperature_2m_min',
       });
 
       final weatherResponse = await _dioClient.getUri(weatherUri);
@@ -203,6 +204,7 @@ class OpenMeteoApiClient {
       }
 
       final current = bodyJson['current'] as Map<String, dynamic>;
+      final daily = bodyJson['daily'] as Map<String, dynamic>?;
 
       // Extract weather data from current object
       final temperature = (current['temperature_2m'] as num?)?.toDouble();
@@ -216,12 +218,37 @@ class OpenMeteoApiClient {
         throw WeatherDataNotFoundException();
       }
 
+      final dailyForecasts = <DailyForecast>[];
+      if (daily != null) {
+        final times = daily['time'] as List<dynamic>?;
+        final weatherCodes = daily['weather_code'] as List<dynamic>?;
+        final maxTemps = daily['temperature_2m_max'] as List<dynamic>?;
+        final minTemps = daily['temperature_2m_min'] as List<dynamic>?;
+
+        if (times != null &&
+            weatherCodes != null &&
+            maxTemps != null &&
+            minTemps != null) {
+          for (var i = 0; i < times.length; i++) {
+            dailyForecasts.add(
+              DailyForecast(
+                date: times[i] as String,
+                weatherCode: (weatherCodes[i] as num).toDouble(),
+                maxTemp: (maxTemps[i] as num).toDouble(),
+                minTemp: (minTemps[i] as num).toDouble(),
+              ),
+            );
+          }
+        }
+      }
+
       return Weather(
         temperature: temperature,
         weatherCode: weatherCode,
         windSpeed: windSpeed,
         windDirection: windDirection,
         apparentTemperature: apparentTemperature,
+        daily: dailyForecasts,
       );
     });
   }

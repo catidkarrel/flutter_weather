@@ -16,6 +16,7 @@ class Weather extends Equatable {
     this.windSpeed,
     this.windDirection,
     this.apparentTemperature,
+    this.daily = const [],
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
@@ -31,6 +32,7 @@ class Weather extends Equatable {
   final double? windSpeed;
   final double? windDirection;
   final double? apparentTemperature;
+  final List<DailyForecast> daily;
 
   @override
   List<Object?> get props => [
@@ -40,5 +42,29 @@ class Weather extends Equatable {
     windSpeed,
     windDirection,
     apparentTemperature,
+    daily,
   ];
+}
+
+@JsonSerializable()
+class DailyForecast extends Equatable {
+  const DailyForecast({
+    required this.date,
+    required this.condition,
+    required this.maxTemp,
+    required this.minTemp,
+  });
+
+  factory DailyForecast.fromJson(Map<String, dynamic> json) =>
+      _$DailyForecastFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DailyForecastToJson(this);
+
+  final String date;
+  final WeatherCondition condition;
+  final double maxTemp;
+  final double minTemp;
+
+  @override
+  List<Object?> get props => [date, condition, maxTemp, minTemp];
 }

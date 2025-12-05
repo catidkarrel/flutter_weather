@@ -40,6 +40,24 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
             apparentTemperature: units.isFahrenheit
                 ? weather.apparentTemperature?.toFahrenheit()
                 : weather.apparentTemperature,
+            daily: weather.daily
+                .map(
+                  (d) => DailyForecast(
+                    date: d.date,
+                    condition: d.condition,
+                    maxTemp: Temperature(
+                      value: units.isFahrenheit
+                          ? d.maxTemp.value.toFahrenheit()
+                          : d.maxTemp.value,
+                    ),
+                    minTemp: Temperature(
+                      value: units.isFahrenheit
+                          ? d.minTemp.value.toFahrenheit()
+                          : d.minTemp.value,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ),
       );
@@ -74,6 +92,24 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
             apparentTemperature: units.isFahrenheit
                 ? weather.apparentTemperature?.toFahrenheit()
                 : weather.apparentTemperature,
+            daily: weather.daily
+                .map(
+                  (d) => DailyForecast(
+                    date: d.date,
+                    condition: d.condition,
+                    maxTemp: Temperature(
+                      value: units.isFahrenheit
+                          ? d.maxTemp.value.toFahrenheit()
+                          : d.maxTemp.value,
+                    ),
+                    minTemp: Temperature(
+                      value: units.isFahrenheit
+                          ? d.minTemp.value.toFahrenheit()
+                          : d.minTemp.value,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ),
       );
@@ -104,6 +140,24 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
             apparentTemperature: units.isFahrenheit
                 ? weather.apparentTemperature?.toFahrenheit()
                 : weather.apparentTemperature,
+            daily: weather.daily
+                .map(
+                  (d) => DailyForecast(
+                    date: d.date,
+                    condition: d.condition,
+                    maxTemp: Temperature(
+                      value: units.isFahrenheit
+                          ? d.maxTemp.value.toFahrenheit()
+                          : d.maxTemp.value,
+                    ),
+                    minTemp: Temperature(
+                      value: units.isFahrenheit
+                          ? d.minTemp.value.toFahrenheit()
+                          : d.minTemp.value,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ),
       );
@@ -137,6 +191,24 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
             apparentTemperature: units.isCelsius
                 ? weather.apparentTemperature?.toCelsius()
                 : weather.apparentTemperature?.toFahrenheit(),
+            daily: weather.daily
+                .map(
+                  (d) => DailyForecast(
+                    date: d.date,
+                    condition: d.condition,
+                    maxTemp: Temperature(
+                      value: units.isCelsius
+                          ? d.maxTemp.value.toCelsius()
+                          : d.maxTemp.value.toFahrenheit(),
+                    ),
+                    minTemp: Temperature(
+                      value: units.isCelsius
+                          ? d.minTemp.value.toCelsius()
+                          : d.minTemp.value.toFahrenheit(),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ),
       );

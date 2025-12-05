@@ -11,6 +11,7 @@ class Weather {
     this.windSpeed,
     this.windDirection,
     this.apparentTemperature,
+    this.daily = const [],
   });
 
   /// Factory constructor for creating Weather instance from json
@@ -35,4 +36,25 @@ class Weather {
   /// Apparent temperature in celsius
   @JsonKey(name: 'apparent_temperature')
   final double? apparentTemperature;
+
+  /// Daily forecast
+  final List<DailyForecast> daily;
+}
+
+@JsonSerializable()
+class DailyForecast {
+  const DailyForecast({
+    required this.date,
+    required this.weatherCode,
+    required this.maxTemp,
+    required this.minTemp,
+  });
+
+  factory DailyForecast.fromJson(Map<String, dynamic> json) =>
+      _$DailyForecastFromJson(json);
+
+  final String date;
+  final double weatherCode;
+  final double maxTemp;
+  final double minTemp;
 }
