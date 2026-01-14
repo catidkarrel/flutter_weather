@@ -145,7 +145,7 @@ class _WeatherDetails extends StatelessWidget {
                     : 'N/A',
               ),
               _DetailItem(
-                icon: Icons.thermostat,
+                icon: weather.condition.toIconEmoji,
                 label: 'Condition',
                 value: weather.condition.name.toUpperCase(),
               ),
@@ -282,6 +282,21 @@ extension on WeatherCondition {
         return '🌨️';
       case WeatherCondition.unknown:
         return '❓';
+    }
+  }
+
+  IconData get toIconEmoji {
+    switch (this) {
+      case WeatherCondition.clear:
+        return Icons.wb_sunny;
+      case WeatherCondition.rainy:
+        return Icons.wb_cloudy_rounded;
+      case WeatherCondition.cloudy:
+        return Icons.wb_cloudy;
+      case WeatherCondition.snowy:
+        return Icons.wb_cloudy_sharp;
+      case WeatherCondition.unknown:
+        return Icons.wb_sunny;
     }
   }
 }
