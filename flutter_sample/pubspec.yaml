@@ -8,14 +8,14 @@ environment:
   flutter: ^3.35.0
 
 dependencies:
-  bloc: 9.0.1
+  bloc: 9.2.0
   equatable: 2.0.8
   flutter:
     sdk: flutter
   flutter_bloc: 9.1.1
   flutter_localizations:
     sdk: flutter
-  hydrated_bloc: ^10.1.1
+  hydrated_bloc: 10.1.1
   intl: ^0.20.2
   json_annotation: ^4.9.0
   path_provider: ^2.1.5
