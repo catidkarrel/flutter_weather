@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import 'package:flutter_sample/pages/weather/weather.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -58,6 +59,19 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
                   ),
                 )
                 .toList(),
+            hourly: weather.hourly
+                .map(
+                  (h) => HourlyForecast(
+                    time: h.time,
+                    condition: h.condition,
+                    temperature: Temperature(
+                      value: units.isFahrenheit
+                          ? h.temperature.value.toFahrenheit()
+                          : h.temperature.value,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ),
       );
@@ -110,6 +124,19 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
                   ),
                 )
                 .toList(),
+            hourly: weather.hourly
+                .map(
+                  (h) => HourlyForecast(
+                    time: h.time,
+                    condition: h.condition,
+                    temperature: Temperature(
+                      value: units.isFahrenheit
+                          ? h.temperature.value.toFahrenheit()
+                          : h.temperature.value,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ),
       );
@@ -154,6 +181,19 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
                       value: units.isFahrenheit
                           ? d.minTemp.value.toFahrenheit()
                           : d.minTemp.value,
+                    ),
+                  ),
+                )
+                .toList(),
+            hourly: weather.hourly
+                .map(
+                  (h) => HourlyForecast(
+                    time: h.time,
+                    condition: h.condition,
+                    temperature: Temperature(
+                      value: units.isFahrenheit
+                          ? h.temperature.value.toFahrenheit()
+                          : h.temperature.value,
                     ),
                   ),
                 )
@@ -205,6 +245,19 @@ class WeatherCubit extends HydratedCubit<WeatherState> {
                       value: units.isCelsius
                           ? d.minTemp.value.toCelsius()
                           : d.minTemp.value.toFahrenheit(),
+                    ),
+                  ),
+                )
+                .toList(),
+            hourly: weather.hourly
+                .map(
+                  (h) => HourlyForecast(
+                    time: h.time,
+                    condition: h.condition,
+                    temperature: Temperature(
+                      value: units.isCelsius
+                          ? h.temperature.value.toCelsius()
+                          : h.temperature.value.toFahrenheit(),
                     ),
                   ),
                 )

@@ -189,6 +189,7 @@ class OpenMeteoApiClient {
         'current':
             'temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code',
         'daily': 'weather_code,temperature_2m_max,temperature_2m_min',
+        'hourly': 'temperature_2m,weather_code',
       });
 
       final weatherResponse = await _dioClient.getUri(weatherUri);
@@ -205,6 +206,7 @@ class OpenMeteoApiClient {
 
       final current = bodyJson['current'] as Map<String, dynamic>;
       final daily = bodyJson['daily'] as Map<String, dynamic>?;
+      final hourly = bodyJson['hourly'] as Map<String, dynamic>?;
 
       // Extract weather data from current object
       final temperature = (current['temperature_2m'] as num?)?.toDouble();
@@ -242,6 +244,25 @@ class OpenMeteoApiClient {
         }
       }
 
+      final hourlyForecasts = <HourlyForecast>[];
+      if (hourly != null) {
+        final times = hourly['time'] as List<dynamic>?;
+        final temps = hourly['temperature_2m'] as List<dynamic>?;
+        final codes = hourly['weather_code'] as List<dynamic>?;
+
+        if (times != null && temps != null && codes != null) {
+          for (var i = 0; i < times.length; i++) {
+            hourlyForecasts.add(
+              HourlyForecast(
+                time: times[i] as String,
+                temperature: (temps[i] as num).toDouble(),
+                weatherCode: (codes[i] as num).toDouble(),
+              ),
+            );
+          }
+        }
+      }
+
       return Weather(
         temperature: temperature,
         weatherCode: weatherCode,
@@ -249,6 +270,7 @@ class OpenMeteoApiClient {
         windDirection: windDirection,
         apparentTemperature: apparentTemperature,
         daily: dailyForecasts,
+        hourly: hourlyForecasts,
       );
     });
   }

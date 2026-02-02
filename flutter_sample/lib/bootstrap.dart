@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sample/flavor_config.dart';
+import 'package:flutter_sample/method_channel/method_channel.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:weather_repository/location_repository.dart';
@@ -35,6 +36,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   // app config can be done here
 
   final locationRepository = LocationRepository();
+
+  final initialData = await getDataFromNative();
+  log('Initial data: $initialData');
 
   try {
     await locationRepository.initLocationPermission();

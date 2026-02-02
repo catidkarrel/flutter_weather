@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'package:flutter_sample/pages/weather/view/forecast_page.dart';
+import 'package:flutter_sample/pages/weather/view/hourly_forecast_page.dart';
 import 'package:flutter_sample/pages/weather/weather.dart';
 import 'package:weather_repository/weather_repository.dart'
     hide DailyForecast, Weather;
@@ -63,6 +64,7 @@ class WeatherPopulated extends StatelessWidget {
                   _WeatherDetails(weather: weather, units: units),
                   const SizedBox(height: 24),
                   _ForecastButton(weather: weather, units: units),
+                  _HourlyForecastButton(weather: weather, units: units),
                 ],
               ),
             ),
@@ -91,6 +93,28 @@ class _ForecastButton extends StatelessWidget {
         );
       },
       child: const Text('7-Day Forecast'),
+    );
+  }
+}
+
+class _HourlyForecastButton extends StatelessWidget {
+  const _HourlyForecastButton({required this.weather, required this.units});
+
+  final Weather weather;
+  final TemperatureUnits units;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      ),
+      onPressed: () {
+        Navigator.of(context).push(
+          HourlyForecastPage.route(),
+        );
+      },
+      child: const Text('Hourly Forecast'),
     );
   }
 }

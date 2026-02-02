@@ -54,6 +54,14 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => $checkedCreate(
                 .toList() ??
             const [],
       ),
+      hourly: $checkedConvert(
+        'hourly',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => HourlyForecast.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            const [],
+      ),
     );
     return val;
   },
@@ -76,6 +84,7 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
   'wind_direction': instance.windDirection,
   'apparent_temperature': instance.apparentTemperature,
   'daily': instance.daily.map((e) => e.toJson()).toList(),
+  'hourly': instance.hourly.map((e) => e.toJson()).toList(),
 };
 
 const _$WeatherConditionEnumMap = {
@@ -117,4 +126,27 @@ Map<String, dynamic> _$DailyForecastToJson(DailyForecast instance) =>
       'condition': _$WeatherConditionEnumMap[instance.condition]!,
       'max_temp': instance.maxTemp.toJson(),
       'min_temp': instance.minTemp.toJson(),
+    };
+
+HourlyForecast _$HourlyForecastFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('HourlyForecast', json, ($checkedConvert) {
+      final val = HourlyForecast(
+        time: $checkedConvert('time', (v) => v as String),
+        temperature: $checkedConvert(
+          'temperature',
+          (v) => Temperature.fromJson(v as Map<String, dynamic>),
+        ),
+        condition: $checkedConvert(
+          'condition',
+          (v) => $enumDecode(_$WeatherConditionEnumMap, v),
+        ),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$HourlyForecastToJson(HourlyForecast instance) =>
+    <String, dynamic>{
+      'time': instance.time,
+      'temperature': instance.temperature.toJson(),
+      'condition': _$WeatherConditionEnumMap[instance.condition]!,
     };

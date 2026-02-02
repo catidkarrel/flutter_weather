@@ -41,6 +41,7 @@ class Weather extends Equatable {
     this.windDirection,
     this.apparentTemperature,
     this.daily = const [],
+    this.hourly = const [],
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
@@ -67,6 +68,15 @@ class Weather extends Equatable {
             ),
           )
           .toList(),
+      hourly: weather.hourly
+          .map(
+            (h) => HourlyForecast(
+              time: h.time,
+              temperature: Temperature(value: h.temperature),
+              condition: h.condition,
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -89,6 +99,7 @@ class Weather extends Equatable {
   final double? windDirection;
   final double? apparentTemperature;
   final List<DailyForecast> daily;
+  final List<HourlyForecast> hourly;
 
   @override
   List<Object?> get props => [
@@ -100,6 +111,7 @@ class Weather extends Equatable {
     windDirection,
     apparentTemperature,
     daily,
+    hourly,
   ];
 
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
@@ -115,6 +127,7 @@ class Weather extends Equatable {
     double? windDirection,
     double? apparentTemperature,
     List<DailyForecast>? daily,
+    List<HourlyForecast>? hourly,
   }) {
     return Weather(
       condition: condition ?? this.condition,
@@ -127,6 +140,7 @@ class Weather extends Equatable {
       windDirection: windDirection ?? this.windDirection,
       apparentTemperature: apparentTemperature ?? this.apparentTemperature,
       daily: daily ?? this.daily,
+      hourly: hourly ?? this.hourly,
     );
   }
 }
@@ -152,4 +166,25 @@ class DailyForecast extends Equatable {
 
   @override
   List<Object?> get props => [date, condition, maxTemp, minTemp];
+}
+
+@JsonSerializable()
+class HourlyForecast extends Equatable {
+  const HourlyForecast({
+    required this.time,
+    required this.temperature,
+    required this.condition,
+  });
+
+  factory HourlyForecast.fromJson(Map<String, dynamic> json) =>
+      _$HourlyForecastFromJson(json);
+
+  Map<String, dynamic> toJson() => _$HourlyForecastToJson(this);
+
+  final String time;
+  final Temperature temperature;
+  final WeatherCondition condition;
+
+  @override
+  List<Object?> get props => [time, temperature, condition];
 }

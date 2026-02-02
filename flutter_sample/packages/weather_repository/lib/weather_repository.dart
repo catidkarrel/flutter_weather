@@ -6,7 +6,7 @@ export 'weather_repository.dart';
 import 'dart:async';
 
 import 'package:open_meteo_api/open_meteo_api.dart'
-    hide Weather, Location, DailyForecast;
+    hide Weather, Location, DailyForecast, HourlyForecast;
 import 'package:weather_repository/location_repository.dart';
 import 'package:weather_repository/weather_repository.dart';
 
@@ -68,6 +68,15 @@ class WeatherRepository {
               ),
             )
             .toList(),
+        hourly: weather.hourly
+            .map(
+              (h) => HourlyForecast(
+                time: h.time,
+                condition: h.weatherCode.toInt().toCondition,
+                temperature: h.temperature,
+              ),
+            )
+            .toList(),
       );
     } on ApiException {
       rethrow;
@@ -102,6 +111,15 @@ class WeatherRepository {
                 condition: d.weatherCode.toInt().toCondition,
                 maxTemp: d.maxTemp,
                 minTemp: d.minTemp,
+              ),
+            )
+            .toList(),
+        hourly: weather.hourly
+            .map(
+              (h) => HourlyForecast(
+                time: h.time,
+                condition: h.weatherCode.toInt().toCondition,
+                temperature: h.temperature,
               ),
             )
             .toList(),
@@ -140,6 +158,15 @@ class WeatherRepository {
                 condition: d.weatherCode.toInt().toCondition,
                 maxTemp: d.maxTemp,
                 minTemp: d.minTemp,
+              ),
+            )
+            .toList(),
+        hourly: weather.hourly
+            .map(
+              (h) => HourlyForecast(
+                time: h.time,
+                condition: h.weatherCode.toInt().toCondition,
+                temperature: h.temperature,
               ),
             )
             .toList(),
