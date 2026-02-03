@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Splash screen page displayed during app initialization
 class SplashPage extends StatefulWidget {
@@ -39,6 +40,11 @@ class _SplashPageState extends State<SplashPage>
     );
 
     unawaited(_controller.forward());
+    Timer(const Duration(seconds: 2), () {
+      if (mounted) {
+        context.go('/weather');
+      }
+    });
   }
 
   @override

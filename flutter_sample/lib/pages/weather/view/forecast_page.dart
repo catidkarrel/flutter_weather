@@ -26,7 +26,12 @@ class ForecastPage extends StatelessWidget {
               await context.read<WeatherCubit>().refreshWeather();
             },
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: EdgeInsets.only(
+                left: 8,
+                right: 8,
+                top: 2,
+                bottom: MediaQuery.paddingOf(context).bottom + 16,
+              ),
               itemCount: dailyForecast.length,
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {

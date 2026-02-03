@@ -8,7 +8,7 @@ void main() {
         expect(
           Weather.fromJson(<String, dynamic>{
             'temperature': 15.3,
-            'weathercode': 63,
+            'weather_code': 63,
             'apparent_temperature': 16.0,
           }),
           isA<Weather>()

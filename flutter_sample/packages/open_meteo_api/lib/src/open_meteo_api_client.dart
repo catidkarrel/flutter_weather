@@ -190,6 +190,7 @@ class OpenMeteoApiClient {
             'temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code',
         'daily': 'weather_code,temperature_2m_max,temperature_2m_min',
         'hourly': 'temperature_2m,weather_code',
+        'timezone': 'auto',
       });
 
       final weatherResponse = await _dioClient.getUri(weatherUri);

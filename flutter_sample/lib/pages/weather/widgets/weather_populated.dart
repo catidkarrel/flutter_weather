@@ -1,10 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-
-import 'package:flutter_sample/pages/weather/view/forecast_page.dart';
-import 'package:flutter_sample/pages/weather/view/hourly_forecast_page.dart';
 import 'package:flutter_sample/pages/weather/weather.dart';
+import 'package:go_router/go_router.dart';
 import 'package:weather_repository/weather_repository.dart'
     hide DailyForecast, Weather;
 
@@ -63,8 +61,13 @@ class WeatherPopulated extends StatelessWidget {
                   const SizedBox(height: 24),
                   _WeatherDetails(weather: weather, units: units),
                   const SizedBox(height: 24),
-                  _ForecastButton(weather: weather, units: units),
-                  _HourlyForecastButton(weather: weather, units: units),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _ForecastButton(weather: weather, units: units),
+                      _HourlyForecastButton(weather: weather, units: units),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -88,9 +91,7 @@ class _ForecastButton extends StatelessWidget {
         foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
       onPressed: () {
-        Navigator.of(context).push(
-          ForecastPage.route(),
-        );
+        context.push('/weather/forecast');
       },
       child: const Text('7-Day Forecast'),
     );
@@ -110,9 +111,7 @@ class _HourlyForecastButton extends StatelessWidget {
         foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
       onPressed: () {
-        Navigator.of(context).push(
-          HourlyForecastPage.route(),
-        );
+        context.push('/weather/hourly');
       },
       child: const Text('Hourly Forecast'),
     );

@@ -17,14 +17,26 @@ class HourlyForecastPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Hourly Forecast')),
       body: BlocBuilder<WeatherCubit, WeatherState>(
         builder: (context, state) {
-          final hourlyForecast = state.weather.hourly;
+          final now = DateTime.now();
+          final hourlyForecast = state.weather.hourly
+              .where((item) {
+                final date = DateTime.parse(item.time);
+                return date.isAfter(now.subtract(const Duration(hours: 1)));
+              })
+              .take(24)
+              .toList();
 
           return RefreshIndicator(
             onRefresh: () async {
               await context.read<WeatherCubit>().refreshWeather();
             },
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: EdgeInsets.only(
+                left: 8,
+                right: 8,
+                top: 2,
+                bottom: MediaQuery.paddingOf(context).bottom + 16,
+              ),
               itemCount: hourlyForecast.length,
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {

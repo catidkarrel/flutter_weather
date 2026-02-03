@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/pages/favorites/cubit/favorites_cubit.dart';
 import 'package:flutter_sample/pages/favorites/models/favorite_location.dart';
-import 'package:flutter_sample/pages/search/view/search_page.dart';
-import 'package:flutter_sample/pages/settings/view/settings_page.dart';
 import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
 import 'package:flutter_sample/pages/weather/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:weather_repository/weather_repository.dart' hide Weather;
 
 class WeatherPage extends StatelessWidget {
   const WeatherPage({super.key});
@@ -53,10 +53,7 @@ class WeatherPage extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.of(context).push<void>(
-              /// Route to settings page
-              SettingsPage.route(),
-            ),
+            onPressed: () => context.go('/settings'),
           ),
         ],
       ),
@@ -85,12 +82,12 @@ class WeatherPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search, semanticLabel: 'Search'),
         onPressed: () async {
-          final location = await Navigator.of(context).push(
-            SearchPage.route(),
-          );
+          final location = await context.push('/weather/search');
           if (!context.mounted) return;
           if (location != null) {
-            await context.read<WeatherCubit>().fetchWeatherByLocation(location);
+            await context.read<WeatherCubit>().fetchWeatherByLocation(
+              location as Location,
+            );
           }
         },
       ),
