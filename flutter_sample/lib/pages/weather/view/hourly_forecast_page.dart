@@ -30,40 +30,54 @@ class HourlyForecastPage extends StatelessWidget {
             onRefresh: () async {
               await context.read<WeatherCubit>().refreshWeather();
             },
-            child: ListView.separated(
-              padding: EdgeInsets.only(
-                left: 8,
-                right: 8,
-                top: 2,
-                bottom: MediaQuery.paddingOf(context).bottom + 16,
-              ),
-              itemCount: hourlyForecast.length,
-              separatorBuilder: (context, index) => const Divider(),
-              itemBuilder: (context, index) {
-                final item = hourlyForecast[index];
-                final date = DateTime.parse(item.time);
-                final time = DateFormat('HH:mm').format(date);
-                final day = DateFormat('MM/dd').format(date);
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 24,
+                    ),
+                    itemCount: hourlyForecast.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 32),
+                    itemBuilder: (context, index) {
+                      final item = hourlyForecast[index];
+                      final date = DateTime.parse(item.time);
+                      final time = DateFormat('HH:mm').format(date);
+                      final day = DateFormat('MM/dd').format(date);
 
-                return ListTile(
-                  leading: Text(
-                    item.condition.toEmoji,
-                    style: const TextStyle(fontSize: 32),
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            day,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            time,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            item.condition.toEmoji,
+                            style: const TextStyle(fontSize: 40),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            '${item.temperature.value.toStringAsFixed(1)}°',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                  title: Text(
-                    time,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  subtitle: Text(
-                    day,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  trailing: Text(
-                    '${item.temperature.value.toStringAsFixed(1)}°',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                );
-              },
+                ),
+              ],
             ),
           );
         },
