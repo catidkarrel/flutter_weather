@@ -17,6 +17,14 @@ class WeatherPage extends StatelessWidget {
 
       /// App bar with settings and favorites buttons
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.directions_run),
+              onPressed: () => context.push('/athlete'),
+            );
+          },
+        ),
         actions: [
           BlocBuilder<WeatherCubit, WeatherState>(
             builder: (context, state) {

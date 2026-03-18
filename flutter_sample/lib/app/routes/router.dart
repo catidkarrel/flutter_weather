@@ -9,6 +9,7 @@ import 'package:flutter_sample/pages/weather/cubit/weather_cubit.dart';
 import 'package:flutter_sample/pages/weather/view/forecast_page.dart';
 import 'package:flutter_sample/pages/weather/view/hourly_forecast_page.dart';
 import 'package:flutter_sample/pages/weather/view/weather_page.dart';
+import 'package:flutter_sample/pages/athlete/view/athlete_page.dart';
 import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -34,6 +35,10 @@ class AppRouter {
           // Better: The SplashPage itself should navigate after delay.
           return null;
         },
+      ),
+      GoRoute(
+        path: '/athlete',
+        builder: (context, state) => const AthleteCastPage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -72,8 +77,9 @@ class AppRouter {
                 path: '/favorites',
                 builder: (context, state) => FavoritesPage(
                   onLocationSelected: (locationName) async {
-                    await context.read<WeatherCubit>()
-                        .fetchWeather(locationName);
+                    await context.read<WeatherCubit>().fetchWeather(
+                      locationName,
+                    );
                     context.go('/weather');
                   },
                 ),
